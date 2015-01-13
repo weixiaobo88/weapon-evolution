@@ -41,12 +41,6 @@ describe("player", function(){
             game = new Game(player_a, player_b);
         });
 
-        it('game spec with **被打败了', function(){
-            var result = game.start().lose_msg;
-
-            assert.include(result, '被打败了.');
-        });
-
         it('game spec with 李四被打败了', function(){
             var result = game.start().lose_msg;
 
@@ -55,26 +49,6 @@ describe("player", function(){
     });
 
     describe('game spec with **攻击了**,**受到了*点伤害,**剩余生命：*...**被打败了', function () {
-        describe('any two players: ', function () {
-            var game_msg;
-
-            beforeEach(function() {
-                var player_a = new Player(player_a_info);
-                var player_b = new Player(player_b_info);
-                var game = new Game(player_a, player_b);
-
-                game_msg = game.start();
-            });
-
-            it('game spec with **攻击了**,**受到了*点伤害,**剩余生命：*...**被打败了', function(){
-                var result = game_msg.attack_process + game_msg.lose_msg;
-
-                assert.include(result, '攻击了');
-                assert.include(result, '受到了');
-                assert.include(result, '剩余生命');
-            });
-        });
-
         describe('player_a PK player_b, player_a PK player_c: ', function () {
             it('player_a and player_b: game spec with 张三攻击了李四,李四受到了1点伤害,李四剩余生命：0\n' +
             '李四被打败了.', function(){
