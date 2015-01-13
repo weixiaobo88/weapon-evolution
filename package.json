@@ -1,9 +1,12 @@
 {
-    "scripts": {
-        "test": "jasmine-node --verbose --junitreport spec"
-    },
-    "dependencies": {
-        "jasmine-node": "1.14.5",
-        "jsmockito": "1.0.5"
-    }
+  "scripts": {
+    "test": "jasmine-node --verbose --junitreport spec"
+  },
+  "dependencies": {
+    "jasmine-node": "1.14.5",
+    "jsmockito": "1.0.5"
+  },
+  "devDependencies": {
+    "chai": "^1.10.0"
+  }
 }
