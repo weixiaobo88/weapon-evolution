@@ -38,7 +38,7 @@ Game.prototype.handle_game_msg = function(result) {
     };
 
     game_msg.lose_msg = inject_lose_msg(result.loser_name);
-
+    
     game_msg.attack_process = inject_attack_process(result.attack_process);
 
     return game_msg;

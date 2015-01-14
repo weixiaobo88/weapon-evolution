@@ -15,7 +15,9 @@ Player.prototype.is_alive = function() {
 };
 
 Player.prototype.attack = function(player_b) {
-    player_b.health_point -= this.attack_point;
+    var injured_point = this.attack_point;
+
+    player_b.health_point -= injured_point;
 
     if(player_b.career === Career.SOLDIER) {
         player_b.health_point += player_b.defend_point + player_b.armor_point;
@@ -31,7 +33,7 @@ Player.prototype.attack = function(player_b) {
             name: player_b.name,
             career: player_b.career
         },
-        injured_point: this.attack_point,
+        injured_point: injured_point,
         attackee_health_point: player_b.health_point
     }
 };
