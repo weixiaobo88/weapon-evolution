@@ -2,11 +2,16 @@ module.exports = Player;
 
 function Player(player) {
     this.name = player.name;
-    this.career = player.career;
     this.health_point = player.health_point;
     this.attack_point = player.attack_point;
     this.defence_point = player.defence_point;
 }
+
+Player.career = '普通人';
+
+Player.prototype.get_career = function() {
+    return Player.career;
+};
 
 Player.prototype.is_alive = function() {
     return this.health_point > 0;
@@ -30,7 +35,6 @@ Player.prototype.use_weapon = function() {
 
 Player.prototype.attack = function(attackee) {
     var attacker = this;
-
     var attackee_injured_point = attacker.get_total_attack_point() - attackee.get_defence_point();
     attackee.health_point -= attackee_injured_point;
 
@@ -38,10 +42,10 @@ Player.prototype.attack = function(attackee) {
 };
 
 Player.prototype.combine_attack_msg = function(attacker, attackee, attackee_injured_point) {
-    return attacker.career + attacker.name
+    return attacker.get_career() + attacker.name
         + attacker.use_weapon()
         + '攻击了'
-        + attackee.career + attackee.name + ','
+        + attackee.get_career() + attackee.name + ','
         + attackee.name + '受到了' + attackee_injured_point + '点伤害,'
         + attackee.name + '剩余生命：' + attackee.health_point + '\n';
 };

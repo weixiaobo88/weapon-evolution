@@ -1,6 +1,5 @@
 var m = require('jsmockito').JsMockito;
 var assert = require('chai').assert;
-var Career = require('../src/Career.js');
 var Player = require('../src/Player.js');
 var Soldier = require('../src/Soldier.js');
 var Weapon = require('../src/Weapon.js');
@@ -16,7 +15,6 @@ describe("game", function(){
 
     var player_a_info = {
         name: '张三',
-        career: Career.NORMAL,
         health_point: 1,
         attack_point: 1,
         defence_point: 0
@@ -24,7 +22,6 @@ describe("game", function(){
 
     var player_b_info = {
         name: '李四',
-        career: Career.NORMAL,
         health_point: 1,
         attack_point: 1,
         defence_point: 0
@@ -32,7 +29,6 @@ describe("game", function(){
 
     var player_c_info = {
         name: '李四',
-        career: Career.NORMAL,
         health_point: 6,
         attack_point: 4,
         defence_point: 0
@@ -40,7 +36,6 @@ describe("game", function(){
 
     var soldier_a_info = {
         name: '张三',
-        career: Career.SOLDIER,
         health_point: 6,
         attack_point: 1,
         defence_point: 1,
@@ -50,7 +45,6 @@ describe("game", function(){
     //
     //var soldier_b_info = {
     //    name: '李四',
-    //    career: Career.SOLDIER,
     //    health_point: 6,
     //    attack_point: 1,
     //    defence_point: 1,

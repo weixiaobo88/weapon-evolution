@@ -8,9 +8,15 @@ function Soldier(soldier) {
     this.armor_point = soldier.armor_point;
 }
 
+Soldier.career = '战士';
+
 Soldier.prototype = Object.create(Player.prototype);
 Soldier.prototype.constructor = Player;
 Soldier.prototype.parent = Player.prototype;
+
+Soldier.prototype.get_career = function() {
+    return Soldier.career;
+};
 
 Soldier.prototype.get_total_attack_point = function() {
     return this.attack_point + this.weapon.attack_point;
