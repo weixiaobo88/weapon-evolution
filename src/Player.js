@@ -1,39 +1,47 @@
 module.exports = Player;
 
-var Career = require('./Career.js');
-
 function Player(player) {
     this.name = player.name;
     this.career = player.career;
     this.health_point = player.health_point;
     this.attack_point = player.attack_point;
-    this.defend_point = player.defend_point;
+    this.defence_point = player.defence_point;
 }
 
 Player.prototype.is_alive = function() {
-    return this.health_point > 0 ? true : false;
+    return this.health_point > 0;
 };
 
-Player.prototype.attack = function(player_b) {
-    var injured_point = this.attack_point;
+Player.prototype.get_name = function() {
+    return this.name;
+};
 
-    player_b.health_point -= injured_point;
+Player.prototype.get_total_attack_point = function() {
+    return this.attack_point;
+};
 
-    if(player_b.career === Career.SOLDIER) {
-        player_b.health_point += player_b.defend_point + player_b.armor_point;
-    }
+Player.prototype.get_defence_point = function() {
+    return 0;
+};
 
-    return {
-        attacker: {
-            name: this.name,
-            career: this.career,
-            weapon: this.weapon || ''
-        },
-        attackee: {
-            name: player_b.name,
-            career: player_b.career
-        },
-        injured_point: injured_point,
-        attackee_health_point: player_b.health_point
-    }
+Player.prototype.use_weapon = function() {
+    return '';
+};
+
+Player.prototype.attack = function(attackee) {
+    var attacker = this;
+
+    var attackee_injured_point = attacker.get_total_attack_point() - attackee.get_defence_point();
+    attackee.health_point -= attackee_injured_point;
+
+    return this.combine_attack_msg(attacker, attackee, attackee_injured_point);
+};
+
+Player.prototype.combine_attack_msg = function(attacker, attackee, attackee_injured_point) {
+    return attacker.career + attacker.name
+        + attacker.use_weapon()
+        + '攻击了'
+        + attackee.career + attackee.name + ','
+        + attackee.name + '受到了' + attackee_injured_point + '点伤害,'
+        + attackee.name + '剩余生命：' + attackee.health_point + '\n';
 };

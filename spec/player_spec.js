@@ -8,17 +8,12 @@ var Game = require('../src/Game.js');
 // about jsmockito : https://github.com/cleishm/jsmockito
 
 describe("player", function(){
-    it("game spec", function(){
-        var mocked_console = m.spy(console);
-        mocked_console.log("李四被打败了.");
-        m.verify(mocked_console).log("李四被打败了.");
-    });
     var player_a_info = {
         name: '张三',
         career: Career.NORMAL,
         health_point: 1,
         attack_point: 1,
-        defend_point: 0
+        defence_point: 0
     };
 
     var player_b_info = {
@@ -26,7 +21,7 @@ describe("player", function(){
         career: Career.NORMAL,
         health_point: 1,
         attack_point: 1,
-        defend_point: 0
+        defence_point: 0
     };
 
     var player_c_info = {
@@ -34,7 +29,7 @@ describe("player", function(){
         career: Career.NORMAL,
         health_point: 6,
         attack_point: 4,
-        defend_point: 0
+        defence_point: 0
     };
 
     var soldier_a_info = {
@@ -42,7 +37,7 @@ describe("player", function(){
         career: Career.SOLDIER,
         health_point: 6,
         attack_point: 1,
-        defend_point: 1,
+        defence_point: 1,
         weapon: Weapon.STICK,
         armor_point: 2
     };
@@ -50,107 +45,48 @@ describe("player", function(){
     var soldier_b_info = {
         name: '李四',
         career: Career.SOLDIER,
-        health_point: 6,
-        attack_point: 1,
-        defend_point: 1,
+        health_point: 8,
+        attack_point: 2,
+        defence_point: 2,
         weapon: Weapon.STICK,
         armor_point: 2
     };
 
-
-    describe('game spec with **被打败了', function() {
-        var game;
-        var result;
-        var player_a;
-        var player_b;
-
-        beforeEach(function() {
-            player_a = new Player(player_a_info);
-            player_b = new Player(player_b_info);
-        });
-
-        it('player_a PK player_b: 李四被打败了', function(){
-            game = new Game(player_a, player_b);
-            result = game.start().lose_msg;
-
-            assert.equal(result, '李四被打败了.');
-        });
-
-        it('player_b PK player_a: 张三被打败了', function(){
-            game = new Game(player_b, player_a);
-            result = game.start().lose_msg;
-
-            assert.equal(result, '张三被打败了.');
-        });
-    });
-
-    describe('game spec with 战士**用优质木棒攻击了普通人**,**受到了*点伤害,**剩余生命：**...**被打败了', function () {
-        it('soldier_a PK player_c: 战士张三用优质木棒攻击了普通人李四,李四受到了5点伤害,李四剩余生命：1\n' +
-                                    '普通人李四攻击了战士张三,张三受到了4点伤害,张三剩余生命：5\n' +
-                                    '李四被打败了.', function(){
-            var soldier_a = new Soldier(soldier_a_info);
-            var player_c = new Player(player_c_info);
-            var game_msg = new Game(soldier_a, player_c).start();
-
-            var result = game_msg.attack_process + game_msg.lose_msg;
-
-            assert.equal(result, '战士张三用优质木棒攻击了普通人李四,李四受到了5点伤害,李四剩余生命：1\n' +
-                                    '普通人李四攻击了战士张三,张三受到了4点伤害,张三剩余生命：5\n' +
-                                    '战士张三用优质木棒攻击了普通人李四,李四受到了5点伤害,李四剩余生命：-4\n' +
-                                    '李四被打败了.')
-        });
-
-        it('player_c PK soldier_a: 普通人李四攻击了战士张三,张三受到了4点伤害,张三剩余生命：5\n' +
-                                    '战士张三用优质木棒攻击了普通人李四,李四受到了5点伤害,李四剩余生命：1\n' +
-                                    '普通人李四攻击了战士张三,张三受到了4点伤害,张三剩余生命：4\n' +
-                                    '战士张三用优质木棒攻击了普通人李四,李四受到了5点伤害,李四剩余生命：-4\n' +
-                                    '李四被打败了.', function(){
-            var soldier_a = new Soldier(soldier_a_info);
-            var player_c = new Player(player_c_info);
-            var game_msg = new Game(player_c, soldier_a).start();
-
-            var result = game_msg.attack_process + game_msg.lose_msg;
-
-            assert.equal(result, '普通人李四攻击了战士张三,张三受到了4点伤害,张三剩余生命：5\n' +
-                                    '战士张三用优质木棒攻击了普通人李四,李四受到了5点伤害,李四剩余生命：1\n' +
-                                    '普通人李四攻击了战士张三,张三受到了4点伤害,张三剩余生命：4\n' +
-                                    '战士张三用优质木棒攻击了普通人李四,李四受到了5点伤害,李四剩余生命：-4\n' +
-                                    '李四被打败了.');
-        });
-
-        it('player_c PK player_a: 普通人张三攻击了普通人李四,李四受到了1点伤害,李四剩余生命：5\n' +
-                                    '普通人李四攻击了普通人张三,张三受到了4点伤害,张三剩余生命：-3\n' +
-                                    '张三被打败了.', function(){
+    describe('player spec with stub is_alive', function() {
+        it('player_a attack player_b once: ', function () {
             var player_a = new Player(player_a_info);
-            var player_c = new Player(player_c_info);
-            var game_msg = new Game(player_a, player_c).start();
+            var player_b = new Player(player_b_info);
 
-            var result = game_msg.attack_process + game_msg.lose_msg;
+            var attack_process = player_a.attack(player_b);
 
-            assert.equal(result, '普通人张三攻击了普通人李四,李四受到了1点伤害,李四剩余生命：5\n' +
-                                    '普通人李四攻击了普通人张三,张三受到了4点伤害,张三剩余生命：-3\n' +
-                                    '张三被打败了.');
+            assert.equal(attack_process, '普通人张三攻击了普通人李四,李四受到了1点伤害,李四剩余生命：0\n');
         });
 
-        it('soldier_a PK soldier_b: 战士张三用优质木棒攻击了战士李四,李四受到了5点伤害,李四剩余生命：3\n' +
-                                    '战士李四攻击了战士张三,张三受到了4点伤害,张三剩余生命：5\n' +
-                                    '战士张三用优质木棒攻击了战士李四,李四受到了5点伤害,李四剩余生命：1\n' +
-                                    '战士李四攻击了战士张三,张三受到了4点伤害,张三剩余生命：4\n' +
-                                    '战士张三用优质木棒攻击了战士李四,李四受到了5点伤害,李四剩余生命：-1\n' +
-                                    '李四被打败了.', function(){
+        it('soldier_a attack player_c once: ', function () {
+            var soldier_a = new Soldier(soldier_a_info);
+            var player_c = new Player(player_c_info);
+
+            var attack_process = soldier_a.attack(player_c);
+
+            assert.equal(attack_process, '战士张三用优质木棒攻击了普通人李四,李四受到了5点伤害,李四剩余生命：1\n');
+        });
+
+        it('player_c attack soldier_a once: ', function () {
+            var player_c = new Player(player_c_info);
+            var soldier_a = new Soldier(soldier_a_info);
+
+            var attack_process = player_c.attack(soldier_a);
+
+            assert.equal(attack_process, '普通人李四攻击了战士张三,张三受到了1点伤害,张三剩余生命：5\n');
+        });
+
+        it('soldier_a attack soldier_b once: ', function () {
             var soldier_a = new Soldier(soldier_a_info);
             var soldier_b = new Soldier(soldier_b_info);
-            var game_msg = new Game(soldier_a, soldier_b).start();
 
-            var result = game_msg.attack_process + game_msg.lose_msg;
-            console.log(result);
-            assert.equal(result, '战士张三用优质木棒攻击了战士李四,李四受到了5点伤害,李四剩余生命：4\n' +
-                                    '战士李四用优质木棒攻击了战士张三,张三受到了5点伤害,张三剩余生命：4\n' +
-                                    '战士张三用优质木棒攻击了战士李四,李四受到了5点伤害,李四剩余生命：2\n' +
-                                    '战士李四用优质木棒攻击了战士张三,张三受到了5点伤害,张三剩余生命：2\n' +
-                                    '战士张三用优质木棒攻击了战士李四,李四受到了5点伤害,李四剩余生命：0\n' +
-                                    '李四被打败了.');
+            var attack_process = soldier_a.attack(soldier_b);
+
+            assert.equal(attack_process, '战士张三用优质木棒攻击了战士李四,李四受到了1点伤害,李四剩余生命：7\n');
         });
     });
-
 });

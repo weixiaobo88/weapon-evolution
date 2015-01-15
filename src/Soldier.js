@@ -1,7 +1,6 @@
 module.exports = Soldier;
 
 var Player = require('./Player.js');
-var Career = require('./Career.js');
 
 function Soldier(soldier) {
     Player.call(this, soldier);
@@ -13,26 +12,14 @@ Soldier.prototype = Object.create(Player.prototype);
 Soldier.prototype.constructor = Player;
 Soldier.prototype.parent = Player.prototype;
 
-Soldier.prototype.attack = function(player_b) {
-    var injured_point = this.attack_point + this.weapon.attack_point;
+Soldier.prototype.get_total_attack_point = function() {
+    return this.attack_point + this.weapon.attack_point;
+};
 
-    player_b.health_point -= injured_point;
+Soldier.prototype.get_defence_point = function() {
+    return this.defence_point + this.armor_point;
+};
 
-    if(player_b.career === Career.SOLDIER) {
-        player_b.health_point += player_b.defend_point + player_b.armor_point;
-    }
-
-    return {
-        attacker: {
-            name: this.name,
-            career: this.career,
-            weapon: this.weapon || ''
-        },
-        attackee: {
-            name: player_b.name,
-            career: player_b.career
-        },
-        injured_point: injured_point,
-        attackee_health_point: player_b.health_point
-    };
+Soldier.prototype.use_weapon = function() {
+    return '用' + this.weapon.name;
 };
