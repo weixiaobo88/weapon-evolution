@@ -1,23 +1,26 @@
-var Weapon = {
-    STICK: {
-        name: '优质木棒',
-        attack_point: 4
-    },
-    POISONED_SWORD: {
-        name: '优质毒剑',
-        attack_point: 2,
-        delay_round: 2
-    },
-    FLAME_SWORD: {
-        name: '火焰剑',
-        attack_point: 2,
-        delay_round: 2
-    },
-    FROST_SWORD: {
-        name: '寒冰剑',
-        attack_point: 2,
-        delay_round: 2
-    }
+module.exports = Weapon;
+
+function Weapon(weapon) {
+    this.name = weapon.name;
+    this.attack_point = weapon.attack_point;
+}
+
+Weapon.prototype.get_name = function() {
+    return this.name;
 };
 
-module.exports = Weapon;
+Weapon.prototype.get_effect_name = function() {
+    return '';
+};
+
+Weapon.prototype.effect_is_triggered = function() {
+    return false;
+};
+
+Weapon.prototype.effect_not_stop_attackee = function() {
+    return true;
+};
+
+Weapon.prototype.effect_msg = function() {
+    return '';
+};

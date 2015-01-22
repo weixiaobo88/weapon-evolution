@@ -1,5 +1,6 @@
 module.exports = Soldier;
 
+var Common = require('./Common.js');
 var Player = require('./Player.js');
 
 function Soldier(soldier) {
@@ -10,9 +11,7 @@ function Soldier(soldier) {
 
 Soldier.career = '战士';
 
-Soldier.prototype = Object.create(Player.prototype);
-Soldier.prototype.constructor = Player;
-Soldier.prototype.parent = Player.prototype;
+Common.inherit(Soldier, Player);
 
 Soldier.prototype.get_career = function() {
     return Soldier.career;
@@ -26,6 +25,33 @@ Soldier.prototype.get_defence_point = function() {
     return this.defence_point + this.armor_point;
 };
 
-Soldier.prototype.use_weapon = function() {
-    return '用' + this.weapon.name;
+Soldier.prototype.get_weapon_name = function() {
+    return this.weapon.get_name();
 };
+
+Soldier.prototype.use_weapon = function() {
+    return '用' + this.get_weapon_name();
+};
+
+Soldier.prototype.not_stop_attackee = function(round) {
+    return this.weapon.effect_not_stop_attackee(round);
+};
+
+Soldier.prototype.trigger_weapon_effect = function(attackee, round) {
+    var result = '';
+
+    if(this.weapon.effect_is_triggered(round)) {
+        result += attackee.get_name() + this.weapon.get_effect_name() + '了,';
+    }
+    //if(this.weapon.get_effect_name() != '') {
+    //    result += attackee.get_name() + this.weapon.get_effect_name() + '了,';
+    //}
+
+    return result;
+};
+
+Soldier.prototype.weapon_effect = function(attackee, round) {
+    return this.weapon.effect_msg(attackee, this, round);
+};
+
+
