@@ -9,11 +9,21 @@ function Flame_Weapon(weapon) {
 
 Common.inherit(Flame_Weapon, Weapon);
 
-Flame_Weapon.effect_name = '着火';
+Flame_Weapon.effect_name = '着火了';
 Flame_Weapon.effect_damage_name = '火焰';
 Flame_Weapon.effect_damage_point = 2;
 Flame_Weapon.delay_round = 2;
 Flame_Weapon.trigger_ratio = 1/3;
+
+Flame_Weapon.prototype.get_effect = function() {
+    return {
+        effect_name: Flame_Weapon.effect_name,
+        effect_damage_name: Flame_Weapon.effect_damage_name,
+        effect_damage_point: Flame_Weapon.effect_damage_point,
+        delay_round: Flame_Weapon.delay_round,
+        trigger_ratio: Flame_Weapon.trigger_ratio
+    };
+};
 
 Flame_Weapon.prototype.get_effect_name = function() {
     return Flame_Weapon.effect_name;
@@ -31,8 +41,8 @@ Flame_Weapon.prototype.get_delay_round = function() {
     return Flame_Weapon.delay_round;
 };
 
-Flame_Weapon.prototype.effect_is_triggered = function(round) {
-    return round <= this.get_delay_round();
+Flame_Weapon.prototype.effect_is_triggered = function() {
+    return Common.get_random_num() < Flame_Weapon.trigger_ratio;
 };
 
 Flame_Weapon.prototype.effect_msg = function(attackee, attacker, round) {

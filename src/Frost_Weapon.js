@@ -9,12 +9,23 @@ function Frost_Weapon(weapon) {
 
 Common.inherit(Frost_Weapon, Weapon);
 
-Frost_Weapon.effect_name = '冻僵';
+Frost_Weapon.effect_name = '冻僵了';
 Frost_Weapon.effect_damage_name = '冻得直哆嗦';
 Frost_Weapon.effect_damage_point = 0;
 Frost_Weapon.effect_damage_round = 3;
 Frost_Weapon.delay_round = 2;
 Frost_Weapon.trigger_ratio = 1/3;
+
+Frost_Weapon.prototype.get_effect = function() {
+    return {
+        effect_name: Frost_Weapon.effect_name,
+        effect_damage_name: Frost_Weapon.effect_damage_name,
+        effect_damage_point: Frost_Weapon.effect_damage_point,
+        delay_round: Frost_Weapon.delay_round,
+        trigger_ratio: Frost_Weapon.trigger_ratio,
+        effect_damage_round: Frost_Weapon.effect_damage_round
+    };
+};
 
 Frost_Weapon.prototype.get_effect_name = function() {
     return Frost_Weapon.effect_name;
@@ -32,8 +43,8 @@ Frost_Weapon.prototype.get_delay_round = function() {
     return Frost_Weapon.delay_round;
 };
 
-Frost_Weapon.prototype.effect_is_triggered = function(round) {
-    return round % Frost_Weapon.effect_damage_round != 0;
+Frost_Weapon.prototype.effect_is_triggered = function() {
+    return Common.get_random_num() < Frost_Weapon.trigger_ratio;
 };
 
 Frost_Weapon.prototype.effect_not_stop_attackee = function(round) {
