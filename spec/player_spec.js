@@ -7,6 +7,7 @@ var Poisonous_Weapon = require('../src/Poisonous_Weapon.js');
 var Flame_Weapon = require('../src/Flame_Weapon.js');
 var Frost_Weapon = require('../src/Frost_Weapon.js');
 var Vertigo_Weapon = require('../src/Vertigo_Weapon.js');
+var Sharp_Weapon = require('../src/Sharp_Weapon.js');
 var Game = require('../src/Game.js');
 // about jsmockito : https://github.com/cleishm/jsmockito
 
@@ -33,6 +34,11 @@ describe("player", function(){
 
     var VERTIGO_HAMMER = {
         name: '晕锤',
+        attack_point: 2
+    };
+
+    var SHARP_SWORD = {
+        name: '利剑',
         attack_point: 2
     };
 
@@ -93,6 +99,7 @@ describe("player", function(){
     var flame_sword = new Flame_Weapon(FLAME_SWORD);
     var frost_sword = new Frost_Weapon(FROST_SWORD);
     var vertigo_hammer = new Vertigo_Weapon(VERTIGO_HAMMER);
+    var sharp_sword = new Sharp_Weapon(SHARP_SWORD);
 
     var soldier_c_info = {
         name: '张三',
@@ -125,6 +132,15 @@ describe("player", function(){
         attack_point: 3,
         defence_point: 1,
         weapon: vertigo_hammer,
+        armor_point: 2
+    };
+
+    var soldier_g_info = {
+        name: '张三',
+        health_point: 6,
+        attack_point: 3,
+        defence_point: 1,
+        weapon: sharp_sword,
         armor_point: 2
     };
 
@@ -235,6 +251,17 @@ describe("player", function(){
                                             '李四晕倒了,无法攻击,眩晕还剩：0轮\n' +
                                             '战士张三用晕锤攻击了普通人李四,李四受到了5点伤害,李四晕倒了,李四剩余生命：1\n' +
                                             '普通人李四攻击了战士张三,张三受到了1点伤害,张三剩余生命：5\n');
+        });
+
+        it('soldier with sharp_sword fight with player: ', function () {
+            var soldier_g = new Soldier(soldier_g_info);
+            var player_e = new Player(player_e_info);
+
+            spyOn(sharp_sword, 'effect_is_triggered').andReturn(true);
+
+            var attack_process = soldier_g.attack(player_e);
+
+            assert.equal(attack_process, '战士张三用利剑攻击了普通人李四,张三发动了全力一击,李四受到了18点伤害,李四剩余生命：-2\n');
         });
     });
 

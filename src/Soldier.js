@@ -45,22 +45,8 @@ Soldier.prototype.get_weapon_effect = function() {
     return this.weapon.get_effect();
 };
 
-Soldier.prototype.trigger_weapon_effect = function (attackee) {
-    //attackee.update_debuff(this.get_weapon());
-
-    var result = '';
-
-    if(this.weapon.effect_is_triggered()) {
-        attackee.update_debuff(this.get_weapon().get_effect(), this);
-        //console.log(this.get_weapon().get_effect());
-        //result += attackee.get_name() + this.weapon.get_effect_name() + '了,';
-    }
-
-    //if(attackee.get_debuff()) {
-    //
-    //}
-
-    //return result;
+Soldier.prototype.trigger_weapon_effect= function () {
+    return this.weapon.effect_is_triggered()
 };
 
 Soldier.prototype.weapon_effect = function(attackee, round) {

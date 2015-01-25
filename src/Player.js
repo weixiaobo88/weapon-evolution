@@ -48,6 +48,9 @@ Player.prototype.weapon_effect = function() {
     return '';
 };
 
+Player.prototype.get_weapon_name = function() {
+    return '';
+};
 
 Player.prototype.not_stop_attackee = function() {
     return true;
@@ -122,6 +125,20 @@ Player.prototype.attack = function(attackee, round) {
         else {
             result += attacker.damaged_by_weapon_effect();
         }
+    }
+
+
+    if(attacker.get_weapon_name() === '利剑' && attacker.trigger_weapon_effect()) {
+        var injured_point = attacker.get_weapon_effect().effect_damage_point * 3;
+        attackee.health_point -= injured_point;
+
+        return attacker.get_career() + attacker.get_name()
+            + attacker.use_weapon()
+            + '攻击了'
+            + attackee.get_career() + attackee.get_name() + ','
+            + attacker.get_name() + '发动了' + attacker.get_weapon_effect().effect_name + ','
+            + attackee.get_name() + '受到了' + injured_point + '点伤害,'
+            + attackee.get_left_health_point();
     }
 
     var attackee_injured_point = attacker.get_total_attack_point() - attackee.get_defence_point();
