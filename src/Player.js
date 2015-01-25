@@ -78,13 +78,6 @@ Player.prototype.get_weapon_effect = function() {
 };
 
 Player.prototype.damaged_by_weapon_effect = function() {
-    if(this.debuff.effect_name === '晕倒了') {
-        if(this.debuff.effect_damage_round === 0) {
-            return '';
-        }
-        return this.get_name() + this.debuff.effect_damage_name + '还剩：' + --this.debuff.effect_damage_round + '轮\n';
-    }
-
     this.health_point -= this.debuff.effect_damage_point;
 
     return this.get_name() + '受到'
@@ -100,9 +93,6 @@ Player.prototype.has_debuff = function() {
 Player.prototype.attack = function(attackee, round) {
     var attacker = this;
 
-    var attackee_injured_point = attacker.get_total_attack_point() - attackee.get_defence_point();
-    attackee.health_point -= attackee_injured_point;
-
     var result = '';
     var injured_by_weapon_effect_msg = '';
 
@@ -111,16 +101,21 @@ Player.prototype.attack = function(attackee, round) {
     //问题：debuff该以什么数据结构存储
     if(attacker.get_weapon_effect()) {
         attackee.debuff = attackee.update_debuff(attacker);
-        console.log(attackee.debuff);
         if(attackee.has_debuff()) {
             injured_by_weapon_effect_msg = attackee.get_name() + attackee.debuff.effect_name + ',';
         }
     }
 
     if(attacker.has_debuff()) {
-        if(this.debuff.effect_name === '冻僵了') {
-            if(--this.debuff.effect_damage_round === 0) {
-                return this.get_name() + this.debuff.effect_damage_name + ',没有击中' + attackee.get_name() + '\n';
+        if(attacker.debuff.effect_name === '冻僵了') {
+            if(--attacker.debuff.effect_damage_round === 0) {
+                return attacker.get_name() + attacker.debuff.effect_damage_name + ',没有击中' + attackee.get_name() + '\n';
+            }
+            result += '';
+        }
+        else if(attacker.debuff.effect_name === '晕倒了') {
+            if(attacker.debuff.effect_damage_round-- != 0) {
+                return attacker.get_name() + attacker.debuff.effect_damage_name + '还剩：' + attacker.debuff.effect_damage_round + '轮\n';
             }
             result += '';
         }
@@ -128,6 +123,9 @@ Player.prototype.attack = function(attackee, round) {
             result += attacker.damaged_by_weapon_effect();
         }
     }
+
+    var attackee_injured_point = attacker.get_total_attack_point() - attackee.get_defence_point();
+    attackee.health_point -= attackee_injured_point;
 
     result += attacker.get_career() + attacker.get_name()
         + attacker.use_weapon()

@@ -92,6 +92,7 @@ describe("player", function(){
     var poisonous_sword = new Poisonous_Weapon(POISONOUS_SWORD);
     var flame_sword = new Flame_Weapon(FLAME_SWORD);
     var frost_sword = new Frost_Weapon(FROST_SWORD);
+    var vertigo_hammer = new Vertigo_Weapon(VERTIGO_HAMMER);
 
     var soldier_c_info = {
         name: '张三',
@@ -101,7 +102,6 @@ describe("player", function(){
         weapon: poisonous_sword,
         armor_point: 2
     };
-
     var soldier_d_info = {
         name: '张三',
         health_point: 6,
@@ -110,6 +110,7 @@ describe("player", function(){
         weapon: flame_sword,
         armor_point: 2
     };
+
     var soldier_e_info = {
         name: '张三',
         health_point: 6,
@@ -118,13 +119,12 @@ describe("player", function(){
         weapon: frost_sword,
         armor_point: 2
     };
-
     var soldier_f_info = {
         name: '张三',
         health_point: 6,
         attack_point: 3,
         defence_point: 1,
-        weapon: new Vertigo_Weapon(VERTIGO_HAMMER),
+        weapon: vertigo_hammer,
         armor_point: 2
     };
 
@@ -216,13 +216,25 @@ describe("player", function(){
                                             '李四冻得直哆嗦,没有击中张三\n');
         });
 
-        xit('soldier_a with vertigo_hammer attack player_d once: ', function () {
+        it('soldier with vertigo_hammer fight with player: ', function () {
             var soldier_f = new Soldier(soldier_f_info);
-            var player_d = new Player(player_d_info);
+            var player_e = new Player(player_e_info);
 
-            var attack_process = soldier_f.attack(player_d);
+            spyOn(vertigo_hammer, 'effect_is_triggered').andReturn(true);
 
-            assert.equal(attack_process, '战士张三用晕锤攻击了普通人李四,李四受到了5点伤害,李四晕倒了,李四剩余生命：7\n');
+            var attack_process = soldier_f.attack(player_e);
+            attack_process += player_e.attack(soldier_f);
+            attack_process += soldier_f.attack(player_e);
+            attack_process += player_e.attack(soldier_f);
+            attack_process += soldier_f.attack(player_e);
+            attack_process += player_e.attack(soldier_f);
+
+            assert.equal(attack_process, '战士张三用晕锤攻击了普通人李四,李四受到了5点伤害,李四晕倒了,李四剩余生命：11\n' +
+                                            '李四晕倒了,无法攻击,眩晕还剩：1轮\n' +
+                                            '战士张三用晕锤攻击了普通人李四,李四受到了5点伤害,李四晕倒了,李四剩余生命：6\n' +
+                                            '李四晕倒了,无法攻击,眩晕还剩：0轮\n' +
+                                            '战士张三用晕锤攻击了普通人李四,李四受到了5点伤害,李四晕倒了,李四剩余生命：1\n' +
+                                            '普通人李四攻击了战士张三,张三受到了1点伤害,张三剩余生命：5\n');
         });
     });
 
