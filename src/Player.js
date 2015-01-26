@@ -61,16 +61,9 @@ Player.prototype.get_debuff = function() {
     return this.debuff;
 };
 
-Player.prototype.update_debuff = function(attacker) {
-    var weapon_effect = attacker.get_weapon_effect();
-
+Player.prototype.update_debuff = function(weapon_effect) {
     if(!this.has_debuff()) {
-        return Common.clone(weapon_effect);
-    }
-
-    this.debuff.delay_round--;
-    if(this.debuff.delay_round < 0) {
-        this.debuff = {};
+        this.debuff = Common.clone(weapon_effect);
     }
 
     return this.debuff;
@@ -102,15 +95,31 @@ Player.prototype.attack = function(attackee, round) {
     //如果attacker有武器，attackee记录debuff
     //如果attacker有debuff，attacker打印debuff
     //问题：debuff该以什么数据结构存储
-    if(attacker.get_weapon_effect()) {
-        attackee.debuff = attackee.update_debuff(attacker);
-        if(attackee.has_debuff()) {
+
+    var attacker_weapon_effect = attacker.get_weapon_effect();
+
+    if(attacker_weapon_effect) {
+        attackee.debuff = attackee.update_debuff(attacker_weapon_effect);
+    }
+
+    if(attackee.has_debuff()) {
+        if(attackee.debuff.delay_round-- > 0) {
             injured_by_weapon_effect_msg = attackee.get_name() + attackee.debuff.effect_name + ',';
         }
+
     }
 
     if(attacker.has_debuff()) {
-        if(attacker.debuff.effect_name === '冻僵了') {
+        if(attacker.debuff.effect_name === '中毒了') {
+            if(attacker.debuff.delay_round >= 0) {
+                result += attacker.damaged_by_weapon_effect();//李四受到2点毒性伤害,李四剩余生命：15
+            }
+            if(attacker.debuff.delay_round < 0) {
+                attacker.debuff = {};
+            }
+            result += ''
+        }
+        else if(attacker.debuff.effect_name === '冻僵了') {
             if(--attacker.debuff.effect_damage_round === 0) {
                 return attacker.get_name() + attacker.debuff.effect_damage_name + ',没有击中' + attackee.get_name() + '\n';
             }
@@ -125,8 +134,8 @@ Player.prototype.attack = function(attackee, round) {
         else {
             result += attacker.damaged_by_weapon_effect();
         }
-    }
 
+    }
 
     if(attacker.get_weapon_name() === '利剑' && attacker.trigger_weapon_effect()) {
         var injured_point = attacker.get_weapon_effect().effect_damage_point * 3;

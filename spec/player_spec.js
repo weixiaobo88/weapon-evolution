@@ -11,7 +11,7 @@ var Sharp_Weapon = require('../src/Sharp_Weapon.js');
 var Game = require('../src/Game.js');
 // about jsmockito : https://github.com/cleishm/jsmockito
 
-describe("player", function(){
+xdescribe("player", function(){
     var STICK = {
         name: '优质木棒',
         attack_point: 4

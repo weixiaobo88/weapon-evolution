@@ -37,12 +37,14 @@ describe("game with weapon effect: ", function(){
         defence_point: 0
     };
 
+    var poisonous_sword = new Poisonous_Weapon(POISONOUS_SWORD);
+
     var soldier_a_info = {
         name: '张三',
         health_point: 6,
         attack_point: 3,
         defence_point: 1,
-        weapon: new Poisonous_Weapon(POISONOUS_SWORD),
+        weapon: poisonous_sword,
         armor_point: 2
     };
 
@@ -74,7 +76,7 @@ describe("game with weapon effect: ", function(){
     };
 
     describe('game spec with weapon effect ', function() {
-        it('soldier_a with poisonous_weapon PK player_c: ', function () {
+        it('soldier with poisonous_weapon PK player: ', function () {
             var soldier_a = new Soldier(soldier_a_info);
             var player_c = new Player(player_c_info);
 
@@ -90,11 +92,7 @@ describe("game with weapon effect: ", function(){
                 return count_b < 5;
             });
 
-            var count_c = 0;
-            spyOn(soldier_a.weapon, 'effect_is_triggered').andCallFake(function() {
-                count_c++;
-                return count_c < 3;
-            });
+            spyOn(soldier_a.weapon, 'effect_is_triggered').andReturn(false);
 
             spyOn(soldier_a, 'attack').andReturn('//张三攻击\n');
             spyOn(player_c, 'attack').andReturn('//李四攻击\n');
@@ -102,15 +100,37 @@ describe("game with weapon effect: ", function(){
             var game_msg = new Game(soldier_a, player_c).start();
 
             assert.equal(game_msg, '//张三攻击\n'
-            //+ '//李四受到*点毒性伤害,李四剩余生命：\n'
-            + '//李四攻击\n'
-            + '//张三攻击\n'
-            //+ '//李四受到*点毒性伤害,李四剩余生命：\n'
-            + '//李四攻击\n'
-            + '张三被打败了.\n');
+                                    + '//李四攻击\n'
+                                    + '//张三攻击\n'
+                                    + '//李四攻击\n'
+                                    + '张三被打败了.\n');
         });
 
-        xit('soldier_a with poisonous_weapon PK soldier_b with flame weapon: ', function () {
+        it('soldier with poisonous_weapon PK player: ', function () {
+            var soldier_a = new Soldier(soldier_a_info);
+            var player_c = new Player(player_c_info);
+
+            var count_c = 0;
+            spyOn(poisonous_sword, 'effect_is_triggered').andCallFake(function() {
+                count_c++;
+                return count_c < 2;
+            });
+
+            var game_msg = new Game(soldier_a, player_c).start();
+
+            assert.equal(game_msg, '战士张三用优质毒剑攻击了普通人李四,李四受到了5点伤害,李四中毒了,李四剩余生命：17\n' +
+                                    '李四受到2点毒性伤害,李四剩余生命：15\n' +
+                                    '普通人李四攻击了战士张三,张三受到了1点伤害,张三剩余生命：5\n' +
+                                    '战士张三用优质毒剑攻击了普通人李四,李四受到了5点伤害,李四中毒了,李四剩余生命：10\n' +
+                                    '李四受到2点毒性伤害,李四剩余生命：8\n' +
+                                    '普通人李四攻击了战士张三,张三受到了1点伤害,张三剩余生命：4\n' +
+                                    '战士张三用优质毒剑攻击了普通人李四,李四受到了5点伤害,李四剩余生命：3\n' +
+                                    '普通人李四攻击了战士张三,张三受到了1点伤害,张三剩余生命：3\n' +
+                                    '战士张三用优质毒剑攻击了普通人李四,李四受到了5点伤害,李四剩余生命：-2\n' +
+                                    '李四被打败了.\n');
+        });
+
+        xit('soldier with poisonous_weapon PK soldier_b with flame weapon: ', function () {
             var soldier_a = new Soldier(soldier_a_info);
             var soldier_b = new Soldier(soldier_b_info);
             console.log(new Game(soldier_a, soldier_b).start());
