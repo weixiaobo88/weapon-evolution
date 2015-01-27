@@ -215,7 +215,12 @@ describe("player", function(){
             var soldier_e = new Soldier(soldier_e_info);
             var player_e = new Player(player_e_info);
 
-            spyOn(frost_sword, 'effect_is_triggered').andReturn(true);
+            var count_a = 0;
+            spyOn(frost_sword, 'effect_is_triggered').andCallFake(function() {
+                    count_a++;
+                    return count_a < 2;
+                }
+            );
 
             var attack_process = soldier_e.attack(player_e);
             attack_process += player_e.attack(soldier_e);
@@ -236,7 +241,12 @@ describe("player", function(){
             var soldier_f = new Soldier(soldier_f_info);
             var player_e = new Player(player_e_info);
 
-            spyOn(vertigo_hammer, 'effect_is_triggered').andReturn(true);
+            var count_a = 0;
+            spyOn(vertigo_hammer, 'effect_is_triggered').andCallFake(function() {
+                    count_a++;
+                    return count_a < 2;
+                }
+            );
 
             var attack_process = soldier_f.attack(player_e);
             attack_process += player_e.attack(soldier_f);

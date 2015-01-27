@@ -33,3 +33,12 @@ Common.clone = function(obj) {
     return new_obj;
 };
 
+Common.has_same_value = function(old_obj, current_obj) {
+    for (var item in old_obj) {
+        if(current_obj[item] != old_obj[item]) {
+            return false;
+        }
+    }
+    return true;
+};
+

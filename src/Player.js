@@ -66,6 +66,11 @@ Player.prototype.update_debuff = function(weapon_effect) {
         this.debuff = Common.clone(weapon_effect);
     }
 
+    if(!Common.has_same_value(this.debuff, weapon_effect)) {
+        this.debuff.effect_damage_point += weapon_effect.effect_damage_point;
+        this.debuff.delay_round += weapon_effect.delay_round;
+    }
+
     return this.debuff;
 };
 
