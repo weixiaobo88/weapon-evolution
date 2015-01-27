@@ -7,7 +7,7 @@ function Player(player) {
     this.health_point = player.health_point;
     this.attack_point = player.attack_point;
     this.defence_point = player.defence_point;
-    this.debuff = {};
+    this.state = {};
 }
 
 Player.career = '普通人';
@@ -52,27 +52,27 @@ Player.prototype.get_weapon_name = function() {
     return '';
 };
 
-Player.prototype.not_stop_attackee = function() {
+Player.prototype.not_stop_attackee = function () {
     return true;
 };
 
 
 Player.prototype.get_debuff = function() {
-    return this.debuff;
+    return this.state;
 };
 
-Player.prototype.update_debuff = function(weapon_effect) {
-    if(!this.has_debuff()) {
-        this.debuff = Common.clone(weapon_effect);
+Player.prototype.update_state = function(weapon_effect) {
+    if(!this.has_state()) {
+        this.state = Common.clone(weapon_effect);
     }
 
-    if(!Common.has_same_value(this.debuff, weapon_effect)) {
-        this.debuff.effect_damage_point += weapon_effect.effect_damage_point;
-        this.debuff.delay_round += weapon_effect.delay_round;
-        this.debuff.effect_damage_round += weapon_effect.effect_damage_round;
+    if(!Common.has_same_value(this.state, weapon_effect)) {
+        this.state.effect_damage_point += weapon_effect.effect_damage_point;
+        this.state.delay_round += weapon_effect.delay_round;
+        this.state.effect_damage_round += weapon_effect.effect_damage_round;
     }
 
-    return this.debuff;
+    return this.state;
 };
 
 Player.prototype.get_weapon_effect = function() {
@@ -80,16 +80,16 @@ Player.prototype.get_weapon_effect = function() {
 };
 
 Player.prototype.damaged_by_weapon_effect = function() {
-    this.health_point -= this.debuff.effect_damage_point;
+    this.health_point -= this.state.effect_damage_point;
 
     return this.get_name() + '受到'
-        + this.debuff.effect_damage_point + '点'
-        + this.debuff.effect_damage_name + '伤害,'
+        + this.state.effect_damage_point + '点'
+        + this.state.effect_damage_name + '伤害,'
         + this.get_left_health_point();
 };
 
-Player.prototype.has_debuff = function() {
-    return !Common.is_empty(this.debuff);
+Player.prototype.has_state = function() {
+    return !Common.is_empty(this.state);
 };
 
 Player.prototype.attack = function(attackee, round) {
@@ -105,35 +105,35 @@ Player.prototype.attack = function(attackee, round) {
     var attacker_weapon_effect = attacker.get_weapon_effect();
 
     if(attacker_weapon_effect) {
-        attackee.debuff = attackee.update_debuff(attacker_weapon_effect);
+        attackee.state = attackee.update_state(attacker_weapon_effect);
     }
 
-    if(attackee.has_debuff()) {
-        if(attackee.debuff.delay_round-- > 0) {
-            injured_by_weapon_effect_msg = attackee.get_name() + attackee.debuff.effect_name + ',';
+    if(attackee.has_state()) {
+        if(attackee.state.delay_round-- > 0) {
+            injured_by_weapon_effect_msg = attackee.get_name() + attackee.state.effect_name + ',';
         }
     }
 
-    if(attacker.has_debuff()) {
-        if(attacker.debuff.effect_name === '中毒了' || attacker.debuff.effect_name === '着火了' ) {
-            if(attacker.debuff.delay_round >= 0) {
+    if(attacker.has_state()) {
+        if(attacker.state.effect_name === '中毒了' || attacker.state.effect_name === '着火了' ) {
+            if(attacker.state.delay_round >= 0) {
                 result += attacker.damaged_by_weapon_effect();//李四受到2点毒性伤害,李四剩余生命：15
             }
-            if(attacker.debuff.delay_round < 0) {
-                attacker.debuff = {};
+            if(attacker.state.delay_round < 0) {
+                attacker.state = {};
             }
             result += ''
         }
-        else if(attacker.debuff.effect_name === '冻僵了') {
-            --attacker.debuff.effect_damage_round;
-            if(attacker.debuff.effect_damage_round === 0 || attacker.debuff.effect_damage_round % 3 === 0) {
-                return attacker.get_name() + attacker.debuff.effect_damage_name + ',没有击中' + attackee.get_name() + '\n';
+        else if(attacker.state.effect_name === '冻僵了') {
+            --attacker.state.effect_damage_round;
+            if(attacker.state.effect_damage_round === 0 || attacker.state.effect_damage_round % 3 === 0) {
+                return attacker.get_name() + attacker.state.effect_damage_name + ',没有击中' + attackee.get_name() + '\n';
             }
             result += '';
         }
-        else if(attacker.debuff.effect_name === '晕倒了') {
-            if(--attacker.debuff.effect_damage_round >= 0) {
-                return attacker.get_name() + attacker.debuff.effect_damage_name + '还剩：' + attacker.debuff.effect_damage_round + '轮\n';
+        else if(attacker.state.effect_name === '晕倒了') {
+            if(--attacker.state.effect_damage_round >= 0) {
+                return attacker.get_name() + attacker.state.effect_damage_name + '还剩：' + attacker.state.effect_damage_round + '轮\n';
             }
 
             result += '';
