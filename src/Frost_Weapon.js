@@ -17,14 +17,17 @@ Frost_Weapon.delay_round = 2;
 Frost_Weapon.trigger_ratio = 1/3;
 
 Frost_Weapon.prototype.get_effect = function() {
-    return {
-        effect_name: Frost_Weapon.effect_name,
-        effect_damage_name: Frost_Weapon.effect_damage_name,
-        effect_damage_point: Frost_Weapon.effect_damage_point,
-        delay_round: Frost_Weapon.delay_round,
-        trigger_ratio: Frost_Weapon.trigger_ratio,
-        effect_damage_round: Frost_Weapon.effect_damage_round
-    };
+    if(this.effect_is_triggered()) {
+        return {
+            effect_name: Frost_Weapon.effect_name,
+            effect_damage_name: Frost_Weapon.effect_damage_name,
+            effect_damage_point: Frost_Weapon.effect_damage_point,
+            delay_round: Frost_Weapon.delay_round,
+            trigger_ratio: Frost_Weapon.trigger_ratio,
+            effect_damage_round: Frost_Weapon.effect_damage_round
+        };
+    }
+    return '';
 };
 
 Frost_Weapon.prototype.get_effect_name = function() {

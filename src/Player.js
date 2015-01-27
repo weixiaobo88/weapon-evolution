@@ -106,11 +106,10 @@ Player.prototype.attack = function(attackee, round) {
         if(attackee.debuff.delay_round-- > 0) {
             injured_by_weapon_effect_msg = attackee.get_name() + attackee.debuff.effect_name + ',';
         }
-
     }
 
     if(attacker.has_debuff()) {
-        if(attacker.debuff.effect_name === '中毒了') {
+        if(attacker.debuff.effect_name === '中毒了' || attacker.debuff.effect_name === '着火了' ) {
             if(attacker.debuff.delay_round >= 0) {
                 result += attacker.damaged_by_weapon_effect();//李四受到2点毒性伤害,李四剩余生命：15
             }
@@ -123,11 +122,17 @@ Player.prototype.attack = function(attackee, round) {
             if(--attacker.debuff.effect_damage_round === 0) {
                 return attacker.get_name() + attacker.debuff.effect_damage_name + ',没有击中' + attackee.get_name() + '\n';
             }
+            if(attacker.debuff.delay_round < 0) {
+                attacker.debuff = {};
+            }
             result += '';
         }
         else if(attacker.debuff.effect_name === '晕倒了') {
-            if(attacker.debuff.effect_damage_round-- != 0) {
+            if(--attacker.debuff.effect_damage_round >= 0) {
                 return attacker.get_name() + attacker.debuff.effect_damage_name + '还剩：' + attacker.debuff.effect_damage_round + '轮\n';
+            }
+            if(attacker.debuff.delay_round < 0) {
+                attacker.debuff = {};
             }
             result += '';
         }

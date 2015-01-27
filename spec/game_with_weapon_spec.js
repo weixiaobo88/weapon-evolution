@@ -38,6 +38,7 @@ describe("game with weapon effect: ", function(){
     };
 
     var poisonous_sword = new Poisonous_Weapon(POISONOUS_SWORD);
+    var flame_sword = new Flame_Weapon(FLAME_SWORD);
 
     var soldier_a_info = {
         name: '张三',
@@ -48,30 +49,41 @@ describe("game with weapon effect: ", function(){
         armor_point: 2
     };
 
-    var soldier_b_info = {
-        name: '李四',
-        health_point: 6,
+    var soldier_e_info = {
+        name: '张三',
+        health_point: 16,
         attack_point: 3,
         defence_point: 1,
-        weapon: new Flame_Weapon(FLAME_SWORD),
+        weapon: poisonous_sword,
         armor_point: 2
     };
 
+    var soldier_b_info = {
+        name: '李四',
+        health_point: 16,
+        attack_point: 3,
+        defence_point: 1,
+        weapon: flame_sword,
+        armor_point: 2
+    };
+
+    var frost_sword = new Frost_Weapon(FROST_SWORD);
     var soldier_c_info = {
         name: '张三',
         health_point: 6,
         attack_point: 3,
         defence_point: 1,
-        weapon: new Frost_Weapon(FROST_SWORD),
+        weapon: frost_sword,
         armor_point: 2
     };
 
+    var vertigo_hammer = new Vertigo_Weapon(VERTIGO_HAMMER);
     var soldier_d_info = {
         name: '张三',
         health_point: 6,
         attack_point: 3,
         defence_point: 1,
-        weapon: new Vertigo_Weapon(VERTIGO_HAMMER),
+        weapon: vertigo_hammer,
         armor_point: 2
     };
 
@@ -130,110 +142,88 @@ describe("game with weapon effect: ", function(){
                                     '李四被打败了.\n');
         });
 
-        xit('soldier with poisonous_weapon PK soldier_b with flame weapon: ', function () {
-            var soldier_a = new Soldier(soldier_a_info);
+        it('soldier with poisonous_weapon PK soldier_b with flame weapon: ', function () {
+            var soldier_a = new Soldier(soldier_e_info);
             var soldier_b = new Soldier(soldier_b_info);
-            console.log(new Game(soldier_a, soldier_b).start());
+
             var count_a = 0;
-            spyOn(soldier_a, 'is_alive').andCallFake(function () {
+            spyOn(poisonous_sword, 'effect_is_triggered').andCallFake(function() {
                 count_a++;
-                return count_a != 3;
+                return count_a < 2;
             });
 
             var count_b = 0;
-            spyOn(soldier_b, 'is_alive').andCallFake(function () {
+            spyOn(flame_sword, 'effect_is_triggered').andCallFake(function() {
                 count_b++;
-                return count_b != 4;
+                return count_b < 2;
             });
-
-            spyOn(soldier_a, 'attack').andReturn('//张三攻击\n');
-            spyOn(soldier_b, 'attack').andReturn('//李四攻击\n');
-            spyOn(soldier_a, 'weapon_effect').andReturn('//李四受到*点毒性伤害,李四剩余生命：\n');
-            spyOn(soldier_b, 'weapon_effect').andReturn('//张三受到*点火焰伤害,张三剩余生命：\n');
 
             var game_msg = new Game(soldier_a, soldier_b).start();
 
-            assert.equal(game_msg, '//张三攻击\n'
-            + '//李四受到*点毒性伤害,李四剩余生命：\n'
-            + '//李四攻击\n'
-            + '//张三受到*点火焰伤害,张三剩余生命：\n'
-            + '//张三攻击\n'
-            + '李四被打败了.\n');
+            assert.equal(game_msg, '战士张三用优质毒剑攻击了战士李四,李四受到了2点伤害,李四中毒了,李四剩余生命：14\n' +
+                                    '李四受到2点毒性伤害,李四剩余生命：12\n' +
+                                    '战士李四用火焰剑攻击了战士张三,张三受到了2点伤害,张三着火了,张三剩余生命：14\n' +
+                                    '张三受到2点火焰伤害,张三剩余生命：12\n' +
+                                    '战士张三用优质毒剑攻击了战士李四,李四受到了2点伤害,李四中毒了,李四剩余生命：10\n' +
+                                    '李四受到2点毒性伤害,李四剩余生命：8\n' +
+                                    '战士李四用火焰剑攻击了战士张三,张三受到了2点伤害,张三着火了,张三剩余生命：10\n' +
+                                    '张三受到2点火焰伤害,张三剩余生命：8\n' +
+                                    '战士张三用优质毒剑攻击了战士李四,李四受到了2点伤害,李四剩余生命：6\n' +
+                                    '战士李四用火焰剑攻击了战士张三,张三受到了2点伤害,张三剩余生命：6\n' +
+                                    '战士张三用优质毒剑攻击了战士李四,李四受到了2点伤害,李四剩余生命：4\n' +
+                                    '战士李四用火焰剑攻击了战士张三,张三受到了2点伤害,张三剩余生命：4\n' +
+                                    '战士张三用优质毒剑攻击了战士李四,李四受到了2点伤害,李四剩余生命：2\n' +
+                                    '战士李四用火焰剑攻击了战士张三,张三受到了2点伤害,张三剩余生命：2\n' +
+                                    '战士张三用优质毒剑攻击了战士李四,李四受到了2点伤害,李四剩余生命：0\n' +
+                                    '李四被打败了.\n');
         });
 
-        xit('soldier_c with frost_weapon PK player_c', function () {
+        it('soldier_c with frost_sword PK player_c', function () {
             var soldier_c = new Soldier(soldier_c_info);
             var player_c = new Player(player_c_info);
 
-            console.log(new Game(soldier_c, player_c).start());
-
             var count_a = 0;
-            spyOn(soldier_c, 'is_alive').andCallFake(function () {
+            spyOn(frost_sword, 'effect_is_triggered').andCallFake(function() {
                 count_a++;
-                return count_a != 5;
+                return count_a < 2;
             });
-
-            var count_b = 0;
-            spyOn(player_c, 'is_alive').andCallFake(function () {
-                count_b++;
-                return count_b != 8;
-            });
-
-            spyOn(soldier_c, 'attack').andReturn('//张三攻击\n');
-            spyOn(player_c, 'attack').andReturn('//李四攻击\n');
 
             var game_msg = new Game(soldier_c, player_c).start();
 
-            assert.equal(game_msg, '//张三攻击\n'
-            + '//李四攻击\n'
-            + '//张三攻击\n'
-            + '//李四攻击\n'
-            + '//张三攻击\n'
-            + '李四冻得直哆嗦,没有击中张三\n'
-            + '//张三攻击\n'
-            + '李四被打败了.\n');
+            assert.equal(game_msg, '战士张三用寒冰剑攻击了普通人李四,李四受到了5点伤害,李四冻僵了,李四剩余生命：17\n' +
+                                    '普通人李四攻击了战士张三,张三受到了1点伤害,张三剩余生命：5\n' +
+                                    '战士张三用寒冰剑攻击了普通人李四,李四受到了5点伤害,李四冻僵了,李四剩余生命：12\n' +
+                                    '普通人李四攻击了战士张三,张三受到了1点伤害,张三剩余生命：4\n' +
+                                    '战士张三用寒冰剑攻击了普通人李四,李四受到了5点伤害,李四剩余生命：7\n' +
+                                    '李四冻得直哆嗦,没有击中张三\n' +
+                                    '战士张三用寒冰剑攻击了普通人李四,李四受到了5点伤害,李四剩余生命：2\n' +
+                                    '普通人李四攻击了战士张三,张三受到了1点伤害,张三剩余生命：3\n' +
+                                    '战士张三用寒冰剑攻击了普通人李四,李四受到了5点伤害,李四剩余生命：-3\n' +
+                                    '李四被打败了.\n');
         });
 
-        xit('soldier_d with vertigo_weapon PK player_c', function () {
+        it('soldier_d with vertigo_hammer PK player_c', function () {
             var soldier_d = new Soldier(soldier_d_info);
             var player_c = new Player(player_c_info);
 
-            console.log(new Game(soldier_d, player_c).start());
             var count_a = 0;
-            spyOn(soldier_d, 'is_alive').andCallFake(function () {
+            spyOn(vertigo_hammer, 'effect_is_triggered').andCallFake(function() {
                 count_a++;
-                return count_a != 5;
-            });
-
-            var count_b = 0;
-            spyOn(player_c, 'is_alive').andCallFake(function () {
-                count_b++;
-                return count_b != 8;
-            });
-
-            spyOn(soldier_d, 'attack').andReturn('//张三攻击\n');
-            spyOn(soldier_d, 'weapon_effect').andCallThrough();
-
-            var count_c = 0;
-            spyOn(player_c, 'attack').andCallFake(function () {
-                if (count_c++ > 2) {
-                    return '//李四攻击\n';
-                }
-                else {
-                    return player_c.attack(soldier_d);
-                }
+                return count_a < 2;
             });
 
             var game_msg = new Game(soldier_d, player_c).start();
 
-            assert.equal(game_msg, '//张三攻击\n'
-            + '李四晕倒了,无法攻击,眩晕还剩：1轮\n'
-            + '//张三攻击\n'
-            + '李四晕倒了,无法攻击,眩晕还剩：0轮\n'
-            + '//张三攻击\n'
-            + '//李四攻击\n'
-            + '//张三攻击\n'
-            + '李四被打败了.\n');
+            assert.equal(game_msg, '战士张三用晕锤攻击了普通人李四,李四受到了5点伤害,李四晕倒了,李四剩余生命：17\n' +
+                                    '李四晕倒了,无法攻击,眩晕还剩：1轮\n' +
+                                    '战士张三用晕锤攻击了普通人李四,李四受到了5点伤害,李四晕倒了,李四剩余生命：12\n' +
+                                    '李四晕倒了,无法攻击,眩晕还剩：0轮\n' +
+                                    '战士张三用晕锤攻击了普通人李四,李四受到了5点伤害,李四剩余生命：7\n' +
+                                    '普通人李四攻击了战士张三,张三受到了1点伤害,张三剩余生命：5\n' +
+                                    '战士张三用晕锤攻击了普通人李四,李四受到了5点伤害,李四剩余生命：2\n' +
+                                    '普通人李四攻击了战士张三,张三受到了1点伤害,张三剩余生命：4\n' +
+                                    '战士张三用晕锤攻击了普通人李四,李四受到了5点伤害,李四剩余生命：-3\n' +
+                                    '李四被打败了.\n');
         });
     });
 });

@@ -17,14 +17,17 @@ Vertigo_Weapon.delay_round = 2;
 Vertigo_Weapon.trigger_ratio = 1/3;
 
 Vertigo_Weapon.prototype.get_effect = function() {
-    return {
-        effect_name: Vertigo_Weapon.effect_name,
-        effect_damage_name: Vertigo_Weapon.effect_damage_name,
-        effect_damage_point: Vertigo_Weapon.effect_damage_point,
-        effect_damage_round: Vertigo_Weapon.effect_damage_round,
-        delay_round: Vertigo_Weapon.delay_round,
-        trigger_ratio: Vertigo_Weapon.trigger_ratio
-    };
+    if(this.effect_is_triggered()) {
+        return {
+            effect_name: Vertigo_Weapon.effect_name,
+            effect_damage_name: Vertigo_Weapon.effect_damage_name,
+            effect_damage_point: Vertigo_Weapon.effect_damage_point,
+            effect_damage_round: Vertigo_Weapon.effect_damage_round,
+            delay_round: Vertigo_Weapon.delay_round,
+            trigger_ratio: Vertigo_Weapon.trigger_ratio
+        };
+    }
+    return '';
 };
 
 Vertigo_Weapon.prototype.get_effect_name = function() {

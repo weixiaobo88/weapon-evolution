@@ -16,13 +16,16 @@ Flame_Weapon.delay_round = 2;
 Flame_Weapon.trigger_ratio = 1/3;
 
 Flame_Weapon.prototype.get_effect = function() {
-    return {
-        effect_name: Flame_Weapon.effect_name,
-        effect_damage_name: Flame_Weapon.effect_damage_name,
-        effect_damage_point: Flame_Weapon.effect_damage_point,
-        delay_round: Flame_Weapon.delay_round,
-        trigger_ratio: Flame_Weapon.trigger_ratio
-    };
+    if(this.effect_is_triggered()) {
+        return {
+            effect_name: Flame_Weapon.effect_name,
+            effect_damage_name: Flame_Weapon.effect_damage_name,
+            effect_damage_point: Flame_Weapon.effect_damage_point,
+            delay_round: Flame_Weapon.delay_round,
+            trigger_ratio: Flame_Weapon.trigger_ratio
+        };
+    }
+    return '';
 };
 
 Flame_Weapon.prototype.get_effect_name = function() {
