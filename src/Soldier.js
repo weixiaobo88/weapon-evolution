@@ -33,14 +33,6 @@ Soldier.prototype.use_weapon = function() {
     return '用' + this.get_weapon_name();
 };
 
-Soldier.prototype.not_stop_attackee = function(round) {
-    return this.weapon.effect_not_stop_attackee(round);
-};
-
-Soldier.prototype.get_weapon = function() {
-    return this.weapon;
-};
-
 Soldier.prototype.get_weapon_effect = function() {
     return this.weapon.get_effect();
 };

@@ -52,15 +52,6 @@ Player.prototype.get_weapon_name = function() {
     return '';
 };
 
-Player.prototype.not_stop_attackee = function () {
-    return true;
-};
-
-
-Player.prototype.get_debuff = function() {
-    return this.state;
-};
-
 Player.prototype.update_state = function(weapon_effect) {
     if(!this.has_state()) {
         this.state = Common.clone(weapon_effect);
