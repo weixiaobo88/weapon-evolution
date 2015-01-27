@@ -65,6 +65,15 @@ describe("game with weapon effect: ", function(){
         armor_point: 2
     };
 
+    var soldier_f_info = {
+        name: '张三',
+        health_point: 30,
+        attack_point: 3,
+        defence_point: 1,
+        weapon: poisonous_sword,
+        armor_point: 2
+    };
+
     var soldier_b_info = {
         name: '李四',
         health_point: 16,
@@ -180,7 +189,7 @@ describe("game with weapon effect: ", function(){
                                     '李四被打败了.\n');
         });
 
-        it('soldier with poisonous_weapon PK soldier_b with flame weapon: ', function () {
+        it('soldier with poisonous_weapon effect triggered once PK soldier_b with flame_weapon effect triggered once: ', function () {
             var soldier_a = new Soldier(soldier_e_info);
             var soldier_b = new Soldier(soldier_b_info);
 
@@ -212,6 +221,44 @@ describe("game with weapon effect: ", function(){
                                     '战士李四用火焰剑攻击了战士张三,张三受到了2点伤害,张三剩余生命：4\n' +
                                     '战士张三用优质毒剑攻击了战士李四,李四受到了2点伤害,李四剩余生命：2\n' +
                                     '战士李四用火焰剑攻击了战士张三,张三受到了2点伤害,张三剩余生命：2\n' +
+                                    '战士张三用优质毒剑攻击了战士李四,李四受到了2点伤害,李四剩余生命：0\n' +
+                                    '李四被打败了.\n');
+        });
+
+        it('soldier with poisonous_weapon effect triggered once PK soldier_b with flame_weapon effect triggered twice: ', function () {
+            var soldier_a = new Soldier(soldier_f_info);
+            var soldier_b = new Soldier(soldier_b_info);
+
+            var count_a = 0;
+            spyOn(poisonous_sword, 'effect_is_triggered').andCallFake(function() {
+                count_a++;
+                return count_a < 2;
+            });
+
+            var count_b = 0;
+            spyOn(flame_sword, 'effect_is_triggered').andCallFake(function() {
+                count_b++;
+                return count_b < 3;
+            });
+
+            var game_msg = new Game(soldier_a, soldier_b).start();
+
+            assert.equal(game_msg, '战士张三用优质毒剑攻击了战士李四,李四受到了2点伤害,李四中毒了,李四剩余生命：14\n' +
+                                    '李四受到2点毒性伤害,李四剩余生命：12\n' +
+                                    '战士李四用火焰剑攻击了战士张三,张三受到了2点伤害,张三着火了,张三剩余生命：28\n' +
+                                    '张三受到2点火焰伤害,张三剩余生命：26\n' +
+                                    '战士张三用优质毒剑攻击了战士李四,李四受到了2点伤害,李四中毒了,李四剩余生命：10\n' +
+                                    '李四受到2点毒性伤害,李四剩余生命：8\n' +
+                                    '战士李四用火焰剑攻击了战士张三,张三受到了2点伤害,张三着火了,张三剩余生命：24\n' +
+                                    '张三受到4点火焰伤害,张三剩余生命：20\n' +
+                                    '战士张三用优质毒剑攻击了战士李四,李四受到了2点伤害,李四剩余生命：6\n' +
+                                    '战士李四用火焰剑攻击了战士张三,张三受到了2点伤害,张三着火了,张三剩余生命：18\n' +
+                                    '张三受到4点火焰伤害,张三剩余生命：14\n' +
+                                    '战士张三用优质毒剑攻击了战士李四,李四受到了2点伤害,李四剩余生命：4\n' +
+                                    '战士李四用火焰剑攻击了战士张三,张三受到了2点伤害,张三着火了,张三剩余生命：12\n' +
+                                    '张三受到4点火焰伤害,张三剩余生命：8\n' +
+                                    '战士张三用优质毒剑攻击了战士李四,李四受到了2点伤害,李四剩余生命：2\n' +
+                                    '战士李四用火焰剑攻击了战士张三,张三受到了2点伤害,张三剩余生命：6\n' +
                                     '战士张三用优质毒剑攻击了战士李四,李四受到了2点伤害,李四剩余生命：0\n' +
                                     '李四被打败了.\n');
         });
