@@ -12,6 +12,7 @@ Common.inherit(Poisonous_Weapon, Weapon);
 Poisonous_Weapon.effect_name = '中毒了';
 Poisonous_Weapon.effect_damage_name = '毒性';
 Poisonous_Weapon.effect_damage_point = 2;
+Poisonous_Weapon.effect_damage_round = 0;
 Poisonous_Weapon.delay_round = 2;
 Poisonous_Weapon.trigger_ratio = 1/3;
 
@@ -22,6 +23,7 @@ Poisonous_Weapon.prototype.get_effect = function() {
             effect_name: Poisonous_Weapon.effect_name,
             effect_damage_name: Poisonous_Weapon.effect_damage_name,
             effect_damage_point: Poisonous_Weapon.effect_damage_point,
+            effect_damage_round: Poisonous_Weapon.effect_damage_round,
             delay_round: Poisonous_Weapon.delay_round,
             trigger_ratio: Poisonous_Weapon.trigger_ratio
         };

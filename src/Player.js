@@ -69,6 +69,7 @@ Player.prototype.update_debuff = function(weapon_effect) {
     if(!Common.has_same_value(this.debuff, weapon_effect)) {
         this.debuff.effect_damage_point += weapon_effect.effect_damage_point;
         this.debuff.delay_round += weapon_effect.delay_round;
+        this.debuff.effect_damage_round += weapon_effect.effect_damage_round;
     }
 
     return this.debuff;
@@ -124,11 +125,9 @@ Player.prototype.attack = function(attackee, round) {
             result += ''
         }
         else if(attacker.debuff.effect_name === '冻僵了') {
-            if(--attacker.debuff.effect_damage_round === 0) {
+            --attacker.debuff.effect_damage_round;
+            if(attacker.debuff.effect_damage_round === 0 || attacker.debuff.effect_damage_round % 3 === 0) {
                 return attacker.get_name() + attacker.debuff.effect_damage_name + ',没有击中' + attackee.get_name() + '\n';
-            }
-            if(attacker.debuff.delay_round < 0) {
-                attacker.debuff = {};
             }
             result += '';
         }
@@ -136,9 +135,7 @@ Player.prototype.attack = function(attackee, round) {
             if(--attacker.debuff.effect_damage_round >= 0) {
                 return attacker.get_name() + attacker.debuff.effect_damage_name + '还剩：' + attacker.debuff.effect_damage_round + '轮\n';
             }
-            if(attacker.debuff.delay_round < 0) {
-                attacker.debuff = {};
-            }
+
             result += '';
         }
         else {
