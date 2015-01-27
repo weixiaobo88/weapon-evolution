@@ -1,6 +1,7 @@
 module.exports = Player;
 
 var Common = require('./Common.js');
+var Effect = require('./Effect.js');
 
 function Player(player) {
     this.name = player.name;
@@ -55,6 +56,7 @@ Player.prototype.get_weapon_name = function() {
 Player.prototype.update_state = function(weapon_effect) {
     if(!this.has_state()) {
         this.state = Common.clone(weapon_effect);
+        //this.state = new Effect(weapon_effect);
     }
 
     if(!Common.has_same_value(this.state, weapon_effect)) {
@@ -110,10 +112,8 @@ Player.prototype.attack = function(attackee, round) {
             if(attacker.state.delay_round >= 0) {
                 result += attacker.damaged_by_weapon_effect();//李四受到2点毒性伤害,李四剩余生命：15
             }
-            if(attacker.state.delay_round < 0) {
-                attacker.state = {};
-            }
             result += ''
+            //result += attacker.state.trigger(attacker);
         }
         else if(attacker.state.effect_name === '冻僵了') {
             --attacker.state.effect_damage_round;
@@ -121,6 +121,7 @@ Player.prototype.attack = function(attackee, round) {
                 return attacker.get_name() + attacker.state.effect_damage_name + ',没有击中' + attackee.get_name() + '\n';
             }
             result += '';
+            //result += attacker.state.trigger(attacker, attackee)
         }
         else if(attacker.state.effect_name === '晕倒了') {
             if(--attacker.state.effect_damage_round >= 0) {
@@ -134,6 +135,16 @@ Player.prototype.attack = function(attackee, round) {
         }
 
     }
+    //if(attacker.has_state()) {
+    //    if(attacker.state.effect_name === '冻僵了') {
+    //        --attacker.state.effect_damage_round;
+    //        if(attacker.state.effect_damage_round === 0 || attacker.state.effect_damage_round % 3 === 0) {
+    //            return attacker.get_name() + attacker.state.effect_damage_name + ',没有击中' + attackee.get_name() + '\n';
+    //        }
+    //        result += '';
+    //        //result += attacker.state.trigger(attacker, attackee)
+    //    }
+    //}
 
     if(attacker.get_weapon_name() === '利剑' && attacker.trigger_weapon_effect()) {
         var injured_point = attacker.get_weapon_effect().effect_damage_point * 3;
