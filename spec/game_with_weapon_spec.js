@@ -3,7 +3,8 @@ var assert = require('chai').assert;
 var Player = require('../src/Player.js');
 var Soldier = require('../src/Soldier.js');
 var Game = require('../src/Game.js');
-var Poisonous_Weapon = require('../src/Poisonous_Weapon.js');
+var Poisonous_Effect = require('../src/Poisonous_Effect.js');
+var Weapon = require('../src/Weapon.js');
 var Flame_Weapon = require('../src/Flame_Weapon.js');
 var Frost_Weapon = require('../src/Frost_Weapon.js');
 var Vertigo_Weapon = require('../src/Vertigo_Weapon.js');
@@ -12,7 +13,8 @@ var Vertigo_Weapon = require('../src/Vertigo_Weapon.js');
 describe("game with weapon effect: ", function(){
     var POISONOUS_SWORD = {
         name: '优质毒剑',
-        attack_point: 2
+        attack_point: 2,
+        effect: new Poisonous_Effect()
     };
 
     var FLAME_SWORD = {
@@ -44,7 +46,7 @@ describe("game with weapon effect: ", function(){
         defence_point: 0
     };
 
-    var poisonous_sword = new Poisonous_Weapon(POISONOUS_SWORD);
+    var poisonous_sword = new Weapon(POISONOUS_SWORD);
     var flame_sword = new Flame_Weapon(FLAME_SWORD);
 
     var soldier_a_info = {
