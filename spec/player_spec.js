@@ -4,7 +4,7 @@ var Player = require('../src/Player.js');
 var Soldier = require('../src/Soldier.js');
 var Weapon = require('../src/Weapon.js');
 var Poisonous_Effect = require('../src/Poisonous_Effect.js');
-var Flame_Weapon = require('../src/Flame_Weapon.js');
+var Flame_Effect = require('../src/Flame_Effect.js');
 var Frost_Weapon = require('../src/Frost_Weapon.js');
 var Vertigo_Weapon = require('../src/Vertigo_Weapon.js');
 var Full_Attack_Weapon = require('../src/Full_Attack_Weapon.js');
@@ -25,7 +25,8 @@ describe("player", function(){
 
     var FLAME_SWORD = {
         name: '火焰剑',
-        attack_point: 2
+        attack_point: 2,
+        effect: new Flame_Effect()
     };
 
     var FROST_SWORD = {
@@ -104,7 +105,7 @@ describe("player", function(){
     };
 
     var poisonous_sword = new Weapon(POISONOUS_SWORD);
-    var flame_sword = new Flame_Weapon(FLAME_SWORD);
+    var flame_sword = new Weapon(FLAME_SWORD);
     var frost_sword = new Frost_Weapon(FROST_SWORD);
     var vertigo_hammer = new Vertigo_Weapon(VERTIGO_HAMMER);
     var sharp_sword = new Full_Attack_Weapon(SHARP_SWORD);
