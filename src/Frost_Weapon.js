@@ -10,14 +10,3 @@ function Frost_Weapon(weapon) {
 }
 
 Common.inherit(Frost_Weapon, Weapon);
-
-Frost_Weapon.prototype.get_effect = function() {
-    if(this.effect_is_triggered()) {
-        return this.effect;
-    }
-    return '';
-};
-
-Frost_Weapon.prototype.effect_is_triggered = function() {
-    return Common.get_random_num() < Frost_Weapon.trigger_ratio;
-};

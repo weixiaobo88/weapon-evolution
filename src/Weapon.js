@@ -4,7 +4,7 @@ var Common = require('./Common.js');
 function Weapon(weapon) {
     this.name = weapon.name;
     this.attack_point = weapon.attack_point;
-    this.trigger_ratio = 0;
+    this.effect = weapon.effect;
 }
 
 Weapon.prototype.get_name = function() {
@@ -21,4 +21,11 @@ Weapon.prototype.get_trigger_ratio = function() {
 
 Weapon.prototype.effect_is_triggered = function() {
     return Common.get_random_num() < this.get_trigger_ratio();
+};
+
+Weapon.prototype.get_effect = function() {
+    if(this.effect_is_triggered()) {
+        return this.effect;
+    }
+    return '';
 };

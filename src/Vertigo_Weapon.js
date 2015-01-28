@@ -10,14 +10,3 @@ function Vertigo_Weapon(weapon) {
 }
 
 Common.inherit(Vertigo_Weapon, Weapon);
-
-Vertigo_Weapon.prototype.get_effect = function() {
-    if(this.effect_is_triggered()) {
-        return this.effect;
-    }
-    return '';
-};
-
-Vertigo_Weapon.prototype.effect_is_triggered = function () {
-    return Common.get_random_num() < Vertigo_Weapon.trigger_ratio;
-};

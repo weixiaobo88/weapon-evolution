@@ -10,14 +10,3 @@ function Full_Attack_Weapon(weapon) {
 }
 
 Common.inherit(Full_Attack_Weapon, Weapon);
-
-Full_Attack_Weapon.prototype.get_effect = function() {
-    if(this.effect_is_triggered()) {
-        return this.effect;
-    }
-    return '';
-};
-
-Full_Attack_Weapon.prototype.effect_is_triggered = function() {
-    return Common.get_random_num() < Full_Attack_Weapon.trigger_ratio;
-};
