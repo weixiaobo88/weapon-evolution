@@ -12,8 +12,8 @@ function Vertigo_Effect() {
 Vertigo_Effect.prototype.trigger = function(attacker, attackee) {
     var result = '';
 
-    if(--attacker.state.effect_damage_round >= 0) {
-        return attacker.get_name() + attacker.state.effect_damage_name + '还剩：' + attacker.state.effect_damage_round + '轮\n';
+    if(--this.effect_damage_round >= 0) {
+        return attacker.get_name() + this.effect_damage_name + '还剩：' + this.effect_damage_round + '轮\n';
     }
 
     result += attacker.normal_msg(attackee);
