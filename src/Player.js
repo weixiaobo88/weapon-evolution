@@ -100,7 +100,7 @@ Player.prototype.normal_msg = function(attackee, attacker_weapon_effect) {
     + attackee.get_career() + attackee.get_name() + ','
     + attacker.trigger_full_attack(attacker_weapon_effect)
     + attackee.get_damage(attacker)
-    + attackee.get_injured_by_weapon_effect_msg()
+    + attackee.get_injured_by_weapon_effect()
     + attackee.get_left_health_point();
 };
 
@@ -128,7 +128,7 @@ Player.prototype.trigger_full_attack = function(attacker_weapon_effect) {
     return result;
 };
 
-Player.prototype.get_injured_by_weapon_effect_msg = function() {
+Player.prototype.get_injured_by_weapon_effect = function() {
     var result = '';
 
     if(this.has_state()) {
