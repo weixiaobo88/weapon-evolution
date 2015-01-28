@@ -7,7 +7,7 @@ var Poisonous_Effect = require('../src/Poisonous_Effect.js');
 var Weapon = require('../src/Weapon.js');
 var Flame_Effect = require('../src/Flame_Effect.js');
 var Frost_Effect = require('../src/Frost_Effect.js');
-var Vertigo_Weapon = require('../src/Vertigo_Weapon.js');
+var Vertigo_Effect = require('../src/Vertigo_Effect.js');
 // about jsmockito : https://github.com/cleishm/jsmockito
 
 describe("game with weapon effect: ", function(){
@@ -31,7 +31,8 @@ describe("game with weapon effect: ", function(){
 
     var VERTIGO_HAMMER = {
         name: '晕锤',
-        attack_point: 2
+        attack_point: 2,
+        effect: new Vertigo_Effect()
     };
 
     var player_c_info = {
@@ -97,7 +98,7 @@ describe("game with weapon effect: ", function(){
         armor_point: 2
     };
 
-    var vertigo_hammer = new Vertigo_Weapon(VERTIGO_HAMMER);
+    var vertigo_hammer = new Weapon(VERTIGO_HAMMER);
     var soldier_d_info = {
         name: '张三',
         health_point: 6,
