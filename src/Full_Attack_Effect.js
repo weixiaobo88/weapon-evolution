@@ -1,7 +1,5 @@
 module.exports = Full_Attack_Effect;
 
-var Common = require('./Common.js');
-
 function Full_Attack_Effect() {
     this.effect_name = '全力一击';
     this.effect_damage_name = '毒性';

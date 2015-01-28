@@ -1,7 +1,5 @@
 module.exports = Vertigo_Effect;
 
-var Common = require('./Common.js');
-
 function Vertigo_Effect() {
     this.effect_name = '晕倒了';
     this.effect_damage_name = '晕倒了,无法攻击,眩晕';

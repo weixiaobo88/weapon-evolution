@@ -1,7 +1,5 @@
 module.exports = Poisonous_Effect;
 
-var Common = require('./Common.js');
-
 function Poisonous_Effect() {
     this.effect_name = '中毒了';
     this.effect_damage_name = '毒性';
