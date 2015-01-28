@@ -1,7 +1,5 @@
 module.exports = Frost_Effect;
 
-var Common = require('./Common.js');
-
 function Frost_Effect() {
     this.effect_name = '冻僵了';
     this.effect_damage_name = '冻得直哆嗦';
@@ -14,9 +12,9 @@ function Frost_Effect() {
 Frost_Effect.prototype.trigger = function(attacker, attackee) {
     var result = '';
 
-    --attacker.state.effect_damage_round;
-    if(attacker.state.effect_damage_round === 0 || attacker.state.effect_damage_round % 3 === 0) {
-        return attacker.get_name() + attacker.state.effect_damage_name + ',没有击中' + attackee.get_name() + '\n';
+    --this.effect_damage_round;
+    if(this.effect_damage_round === 0 || this.effect_damage_round % 3 === 0) {
+        return attacker.get_name() + this.effect_damage_name + ',没有击中' + attackee.get_name() + '\n';
     }
 
     result += attacker.normal_msg(attackee);
