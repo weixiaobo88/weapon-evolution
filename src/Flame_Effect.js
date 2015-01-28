@@ -11,15 +11,14 @@ function Flame_Effect() {
     this.trigger_ratio = 1/3;
 }
 
-//Common.inherit(Flame_Effect, Effect);
-
-Flame_Effect.prototype.trigger = function(attacker) {
+Flame_Effect.prototype.trigger = function(attacker, attackee) {
     var result = '';
 
-    //if(this.effect_name === '中毒了' || this.effect_name === '着火了' ) {
-        if(this.delay_round >= 0) {
-            result += attacker.damaged_by_weapon_effect();//李四受到2点毒性伤害,李四剩余生命：15
-        }
-    //}
+    if(this.delay_round >= 0) {
+        result += attacker.damaged_by_weapon_effect();//李四受到2点毒性伤害,李四剩余生命：15
+    }
+
+    result += attacker.normal_msg(attackee);
+
     return result;
 };

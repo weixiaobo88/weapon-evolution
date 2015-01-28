@@ -7,7 +7,7 @@ var Poisonous_Weapon = require('../src/Poisonous_Weapon.js');
 var Flame_Weapon = require('../src/Flame_Weapon.js');
 var Frost_Weapon = require('../src/Frost_Weapon.js');
 var Vertigo_Weapon = require('../src/Vertigo_Weapon.js');
-var Sharp_Weapon = require('../src/Sharp_Weapon.js');
+var Full_Attack_Weapon = require('../src/Full_Attack_Weapon.js');
 var Game = require('../src/Game.js');
 // about jsmockito : https://github.com/cleishm/jsmockito
 
@@ -77,6 +77,13 @@ describe("player", function(){
         defence_point: 0
     };
 
+    var player_f_info = {
+        name: '李四',
+        health_point: 20,
+        attack_point: 4,
+        defence_point: 0
+    };
+
     var soldier_a_info = {
         name: '张三',
         health_point: 6,
@@ -99,7 +106,7 @@ describe("player", function(){
     var flame_sword = new Flame_Weapon(FLAME_SWORD);
     var frost_sword = new Frost_Weapon(FROST_SWORD);
     var vertigo_hammer = new Vertigo_Weapon(VERTIGO_HAMMER);
-    var sharp_sword = new Sharp_Weapon(SHARP_SWORD);
+    var sharp_sword = new Full_Attack_Weapon(SHARP_SWORD);
 
     var soldier_c_info = {
         name: '张三',
@@ -265,13 +272,17 @@ describe("player", function(){
 
         it('soldier with sharp_sword fight with player: ', function () {
             var soldier_g = new Soldier(soldier_g_info);
-            var player_e = new Player(player_e_info);
+            var player_e = new Player(player_f_info);
 
             spyOn(sharp_sword, 'effect_is_triggered').andReturn(true);
 
             var attack_process = soldier_g.attack(player_e);
+            attack_process += player_e.attack(soldier_g);
+            attack_process += soldier_g.attack(player_e);
 
-            assert.equal(attack_process, '战士张三用利剑攻击了普通人李四,张三发动了全力一击,李四受到了18点伤害,李四剩余生命：-2\n');
+            assert.equal(attack_process, '战士张三用利剑攻击了普通人李四,张三发动了全力一击,李四受到了15点伤害,李四剩余生命：5\n' +
+                                            '普通人李四攻击了战士张三,张三受到了1点伤害,张三剩余生命：5\n' +
+                                            '战士张三用利剑攻击了普通人李四,张三发动了全力一击,李四受到了15点伤害,李四剩余生命：-10\n');
         });
     });
 

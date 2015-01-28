@@ -11,15 +11,14 @@ function Vertigo_Effect() {
     this.trigger_ratio = 1/3;
 }
 
-//Common.inherit(Vertigo_Effect, Effect);
-
-Vertigo_Effect.prototype.trigger = function(attacker) {
+Vertigo_Effect.prototype.trigger = function(attacker, attackee) {
     var result = '';
 
-    if(this.effect_name === '中毒了' || this.effect_name === '着火了' ) {
-        if(this.delay_round >= 0) {
-            result += attacker.damaged_by_weapon_effect();//李四受到2点毒性伤害,李四剩余生命：15
-        }
+    if(--attacker.state.effect_damage_round >= 0) {
+        return attacker.get_name() + attacker.state.effect_damage_name + '还剩：' + attacker.state.effect_damage_round + '轮\n';
     }
+
+    result += attacker.normal_msg(attackee);
+
     return result;
 };

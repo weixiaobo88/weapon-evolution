@@ -14,9 +14,6 @@ Weapon.prototype.get_name = function() {
 Weapon.prototype.get_effect = function() {
     return null;
 };
-Weapon.prototype.get_effect_name = function() {
-    return null;
-};
 
 Weapon.prototype.get_trigger_ratio = function() {
     return this.trigger_ratio;
@@ -24,12 +21,4 @@ Weapon.prototype.get_trigger_ratio = function() {
 
 Weapon.prototype.effect_is_triggered = function() {
     return Common.get_random_num() < this.get_trigger_ratio();
-};
-
-Weapon.prototype.effect_not_stop_attackee = function() {
-    return true;
-};
-
-Weapon.prototype.effect_msg = function() {
-    return '';
 };

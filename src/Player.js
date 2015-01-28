@@ -1,7 +1,6 @@
 module.exports = Player;
 
 var Common = require('./Common.js');
-var Effect = require('./Effect.js');
 
 function Player(player) {
     this.name = player.name;
@@ -37,18 +36,6 @@ Player.prototype.use_weapon = function() {
     return '';
 };
 
-Player.prototype.trigger_weapon_effect = function() {
-    return '';
-};
-
-Player.prototype.damaged_by_weapon = function(damaged_point) {
-    this.health_point -= damaged_point;
-};
-
-Player.prototype.weapon_effect = function() {
-    return '';
-};
-
 Player.prototype.get_weapon_name = function() {
     return '';
 };
@@ -56,7 +43,6 @@ Player.prototype.get_weapon_name = function() {
 Player.prototype.update_state = function(weapon_effect) {
     if(!this.has_state()) {
         this.state = Common.clone(weapon_effect);
-        //this.state = new Effect(weapon_effect);
     }
 
     if(!Common.has_same_value(this.state, weapon_effect)) {
@@ -89,7 +75,6 @@ Player.prototype.attack = function(attackee, round) {
     var attacker = this;
 
     var result = '';
-    var injured_by_weapon_effect_msg = '';
 
     //如果attacker有武器，attackee记录debuff
     //如果attacker有debuff，attacker打印debuff
@@ -101,78 +86,68 @@ Player.prototype.attack = function(attackee, round) {
         attackee.state = attackee.update_state(attacker_weapon_effect);
     }
 
-    if(attackee.has_state()) {
-        if(attackee.state.delay_round-- > 0) {
-            injured_by_weapon_effect_msg = attackee.get_name() + attackee.state.effect_name + ',';
-        }
-    }
-
     if(attacker.has_state()) {
-        if(attacker.state.effect_name === '中毒了' || attacker.state.effect_name === '着火了' ) {
-            if(attacker.state.delay_round >= 0) {
-                result += attacker.damaged_by_weapon_effect();//李四受到2点毒性伤害,李四剩余生命：15
-            }
-            result += ''
-            //result += attacker.state.trigger(attacker);
-        }
-        else if(attacker.state.effect_name === '冻僵了') {
-            --attacker.state.effect_damage_round;
-            if(attacker.state.effect_damage_round === 0 || attacker.state.effect_damage_round % 3 === 0) {
-                return attacker.get_name() + attacker.state.effect_damage_name + ',没有击中' + attackee.get_name() + '\n';
-            }
-            result += '';
-            //result += attacker.state.trigger(attacker, attackee)
-        }
-        else if(attacker.state.effect_name === '晕倒了') {
-            if(--attacker.state.effect_damage_round >= 0) {
-                return attacker.get_name() + attacker.state.effect_damage_name + '还剩：' + attacker.state.effect_damage_round + '轮\n';
-            }
-
-            result += '';
-        }
-        else {
-            result += attacker.damaged_by_weapon_effect();
-        }
-
+        result =  attacker.state.trigger(attacker, attackee);
     }
-    //if(attacker.has_state()) {
-    //    if(attacker.state.effect_name === '冻僵了') {
-    //        --attacker.state.effect_damage_round;
-    //        if(attacker.state.effect_damage_round === 0 || attacker.state.effect_damage_round % 3 === 0) {
-    //            return attacker.get_name() + attacker.state.effect_damage_name + ',没有击中' + attackee.get_name() + '\n';
-    //        }
-    //        result += '';
-    //        //result += attacker.state.trigger(attacker, attackee)
-    //    }
-    //}
-
-    if(attacker.get_weapon_name() === '利剑' && attacker.trigger_weapon_effect()) {
-        var injured_point = attacker.get_weapon_effect().effect_damage_point * 3;
-        attackee.health_point -= injured_point;
-
-        return attacker.get_career() + attacker.get_name()
-            + attacker.use_weapon()
-            + '攻击了'
-            + attackee.get_career() + attackee.get_name() + ','
-            + attacker.get_name() + '发动了' + attacker.get_weapon_effect().effect_name + ','
-            + attackee.get_name() + '受到了' + injured_point + '点伤害,'
-            + attackee.get_left_health_point();
+    else {
+        result += this.normal_msg(attackee, attacker_weapon_effect);
     }
-
-    var attackee_injured_point = attacker.get_total_attack_point() - attackee.get_defence_point();
-    attackee.health_point -= attackee_injured_point;
-
-    result += attacker.get_career() + attacker.get_name()
-        + attacker.use_weapon()
-        + '攻击了'
-        + attackee.get_career() + attackee.get_name() + ','
-        + attackee.get_name() + '受到了' + attackee_injured_point + '点伤害,'
-        + injured_by_weapon_effect_msg
-        + attackee.get_left_health_point();
 
     return result;
 };
 
 Player.prototype.get_left_health_point = function() {
     return this.name + '剩余生命：' + this.health_point + '\n';
+};
+
+Player.prototype.normal_msg = function(attackee, attacker_weapon_effect) {
+    var attacker = this;
+    var result = '';
+
+    result += attacker.get_career() + attacker.get_name()
+    + attacker.use_weapon()
+    + '攻击了'
+    + attackee.get_career() + attackee.get_name() + ','
+    + attacker.trigger_full_attack(attacker_weapon_effect)
+    + attackee.get_damage(attacker)
+    + attackee.get_injured_by_weapon_effect_msg()
+    + attackee.get_left_health_point();
+
+    return result;
+};
+
+Player.prototype.get_damage = function(attacker) {
+    var attackee = this;
+    var attackee_injured_point = attacker.get_total_attack_point() - attackee.get_defence_point();
+
+    if(attackee.state.effect_name == '全力一击') {
+        attackee_injured_point *= 3;
+    }
+
+    attackee.health_point -= attackee_injured_point;
+
+    return attackee.get_name() + '受到了' + attackee_injured_point + '点伤害,'
+};
+
+Player.prototype.trigger_full_attack = function(attacker_weapon_effect) {
+    var attacker = this;
+    var result = '';
+
+    if(attacker_weapon_effect && attacker.get_weapon_name() === '利剑') {
+        result = attacker.get_name() + '发动了' + attacker_weapon_effect.effect_name + ','
+    }
+
+    return result;
+};
+
+Player.prototype.get_injured_by_weapon_effect_msg = function() {
+    var result = '';
+
+    if(this.has_state()) {
+        if(this.state.delay_round-- > 0) {
+            result = this.get_name() + this.state.effect_name + ',';
+        }
+    }
+
+    return result;
 };

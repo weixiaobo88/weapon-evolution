@@ -11,15 +11,15 @@ function Frost_Effect() {
     this.trigger_ratio = 1/3;
 }
 
-//Common.inherit(Frost_Effect, Effect);
-
 Frost_Effect.prototype.trigger = function(attacker, attackee) {
     var result = '';
 
     --attacker.state.effect_damage_round;
     if(attacker.state.effect_damage_round === 0 || attacker.state.effect_damage_round % 3 === 0) {
-        result += attacker.get_name() + attacker.state.effect_damage_name + ',没有击中' + attackee.get_name() + '\n';
+        return attacker.get_name() + attacker.state.effect_damage_name + ',没有击中' + attackee.get_name() + '\n';
     }
+
+    result += attacker.normal_msg(attackee);
 
     return result;
 };

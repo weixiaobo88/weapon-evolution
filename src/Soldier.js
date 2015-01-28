@@ -36,13 +36,3 @@ Soldier.prototype.use_weapon = function() {
 Soldier.prototype.get_weapon_effect = function() {
     return this.weapon.get_effect();
 };
-
-Soldier.prototype.trigger_weapon_effect= function () {
-    return this.weapon.effect_is_triggered()
-};
-
-Soldier.prototype.weapon_effect = function(attackee, round) {
-    return this.weapon.effect_msg(attackee, this, round);
-};
-
-

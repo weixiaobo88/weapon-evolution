@@ -11,20 +11,11 @@ Game.prototype.start = function() {
 
     var fight_process = '';
 
-    var round = 0;
     while (attacker.is_alive() && attackee.is_alive()) {
-        //if(++round > 1) {
-        //    fight_process += attackee.weapon_effect(attacker, round);
-        //}
-        round = round + 1;
-
-        fight_process += attacker.attack(attackee, round);
+        fight_process += attacker.attack(attackee);
 
         if (attackee.is_alive()) {
-            //fight_process += attacker.weapon_effect(attackee, round);
-            //if(attacker.not_stop_attackee(round)) {
-                fight_process += attackee.attack(attacker, round);
-            //}
+            fight_process += attackee.attack(attacker);
         }
     }
 
