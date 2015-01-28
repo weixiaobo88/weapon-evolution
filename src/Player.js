@@ -76,10 +76,6 @@ Player.prototype.attack = function(attackee, round) {
 
     var result = '';
 
-    //如果attacker有武器，attackee记录debuff
-    //如果attacker有debuff，attacker打印debuff
-    //问题：debuff该以什么数据结构存储
-
     var attacker_weapon_effect = attacker.get_weapon_effect();
 
     if(attacker_weapon_effect) {

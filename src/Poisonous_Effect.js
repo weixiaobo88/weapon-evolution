@@ -15,7 +15,7 @@ Poisonous_Effect.prototype.trigger = function(attacker, attackee) {
     var result = '';
 
     if(this.delay_round >= 0) {
-        result += attacker.damaged_by_weapon_effect();//李四受到2点毒性伤害,李四剩余生命：15
+        result += attacker.damaged_by_weapon_effect();
     }
 
     result += attacker.normal_msg(attackee);
