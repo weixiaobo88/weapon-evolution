@@ -71,10 +71,8 @@ Player.prototype.has_state = function() {
     return !Common.is_empty(this.state);
 };
 
-Player.prototype.attack = function(attackee, round) {
+Player.prototype.attack = function (attackee) {
     var attacker = this;
-
-    var result = '';
 
     var attacker_weapon_effect = attacker.get_weapon_effect();
 
@@ -83,13 +81,10 @@ Player.prototype.attack = function(attackee, round) {
     }
 
     if(attacker.has_state()) {
-        result =  attacker.state.trigger(attacker, attackee);
-    }
-    else {
-        result += this.normal_msg(attackee, attacker_weapon_effect);
+        return attacker.state.trigger(attacker, attackee);
     }
 
-    return result;
+    return this.normal_msg(attackee, attacker_weapon_effect);
 };
 
 Player.prototype.get_left_health_point = function() {
@@ -98,9 +93,8 @@ Player.prototype.get_left_health_point = function() {
 
 Player.prototype.normal_msg = function(attackee, attacker_weapon_effect) {
     var attacker = this;
-    var result = '';
 
-    result += attacker.get_career() + attacker.get_name()
+    return attacker.get_career() + attacker.get_name()
     + attacker.use_weapon()
     + '攻击了'
     + attackee.get_career() + attackee.get_name() + ','
@@ -108,8 +102,6 @@ Player.prototype.normal_msg = function(attackee, attacker_weapon_effect) {
     + attackee.get_damage(attacker)
     + attackee.get_injured_by_weapon_effect_msg()
     + attackee.get_left_health_point();
-
-    return result;
 };
 
 Player.prototype.get_damage = function(attacker) {
