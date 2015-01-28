@@ -2,11 +2,11 @@ module.exports = Sharp_Weapon;
 
 var Common = require('./Common.js');
 var Weapon = require('./Weapon.js');
-var Sharp_Effect = require('./Sharp_Effect.js');
+var Sharp_Effect = require('./Full_Attack_Effect.js');
 
 function Sharp_Weapon(weapon) {
     Weapon.call(this, weapon);
-    this.effect = new Sharp_Effect();
+    this.effect = new Full_Attack_Effect();
 }
 
 Common.inherit(Sharp_Weapon, Weapon);
