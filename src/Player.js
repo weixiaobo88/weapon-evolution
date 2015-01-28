@@ -64,7 +64,7 @@ Player.prototype.damaged_by_weapon_effect = function() {
     return this.get_name() + '受到'
         + this.state.effect_damage_point + '点'
         + this.state.effect_damage_name + '伤害,'
-        + this.get_left_health_point();
+        + this.get_left_health_point_msg();
 };
 
 Player.prototype.has_state = function() {
@@ -87,24 +87,31 @@ Player.prototype.attack = function (attackee) {
     return this.normal_msg(attackee, attacker_weapon_effect);
 };
 
-Player.prototype.get_left_health_point = function() {
-    return this.name + '剩余生命：' + this.health_point + '\n';
-};
-
 Player.prototype.normal_msg = function(attackee, attacker_weapon_effect) {
     var attacker = this;
 
-    return attacker.get_career() + attacker.get_name()
-    + attacker.use_weapon()
-    + '攻击了'
-    + attackee.get_career() + attackee.get_name() + ','
-    + attacker.trigger_full_attack(attacker_weapon_effect)
-    + attackee.get_damage(attacker)
-    + attackee.get_injured_by_weapon_effect()
-    + attackee.get_left_health_point();
+    return attacker.attack_opponent_msg(attackee)
+    + attacker.trigger_full_attack_msg(attacker_weapon_effect)
+    + attackee.get_damage_msg(attacker)
+    + attackee.get_injured_by_weapon_effect_msg()
+    + attackee.get_left_health_point_msg();
 };
 
-Player.prototype.get_damage = function(attacker) {
+
+Player.prototype.get_left_health_point_msg = function() {
+    return this.name + '剩余生命：' + this.health_point + '\n';
+};
+
+Player.prototype.attack_opponent_msg = function(attackee) {
+    var attacker = this;
+
+    return attacker.get_career() + attacker.get_name()
+            + attacker.use_weapon()
+            + '攻击了'
+            + attackee.get_career() + attackee.get_name() + ',';
+};
+
+Player.prototype.get_damage_msg = function(attacker) {
     var attackee = this;
     var attackee_injured_point = attacker.get_total_attack_point() - attackee.get_defence_point();
 
@@ -117,7 +124,9 @@ Player.prototype.get_damage = function(attacker) {
     return attackee.get_name() + '受到了' + attackee_injured_point + '点伤害,'
 };
 
-Player.prototype.trigger_full_attack = function(attacker_weapon_effect) {
+//using one 'return' and one 'variable'
+//or using multiple 'return' and no 'variable'
+Player.prototype.trigger_full_attack_msg = function(attacker_weapon_effect) {
     var attacker = this;
     var result = '';
 
@@ -128,7 +137,7 @@ Player.prototype.trigger_full_attack = function(attacker_weapon_effect) {
     return result;
 };
 
-Player.prototype.get_injured_by_weapon_effect = function() {
+Player.prototype.get_injured_by_weapon_effect_msg = function() {
     var result = '';
 
     if(this.has_state()) {
