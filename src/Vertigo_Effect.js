@@ -16,7 +16,7 @@ Vertigo_Effect.prototype.trigger = function(attacker, attackee) {
         return attacker.get_name() + this.effect_damage_name + '还剩：' + this.effect_damage_round + '轮\n';
     }
 
-    result += attacker.normal_msg(attackee);
+    result += attacker.build_attack_msg(attackee);
 
     return result;
 };

@@ -40,18 +40,15 @@ Player.prototype.get_weapon_name = function() {
     return '';
 };
 
-Player.prototype.update_state = function(weapon_effect) {
+Player.prototype.update_state = function(state) {
     if(!this.has_state()) {
-        this.state = Common.clone(weapon_effect);
+        this.state = state;
     }
 
-    if(!Common.has_same_value(this.state, weapon_effect)) {
-        this.state.effect_damage_point += weapon_effect.effect_damage_point;
-        this.state.delay_round += weapon_effect.delay_round;
-        this.state.effect_damage_round += weapon_effect.effect_damage_round;
+    if(!Common.has_same_value(this.state, state)) {
+        this.state.add(state);
     }
 
-    return this.state;
 };
 
 Player.prototype.get_weapon_effect = function() {
@@ -77,17 +74,39 @@ Player.prototype.attack = function (attackee) {
     var attacker_weapon_effect = attacker.get_weapon_effect();
 
     if(attacker_weapon_effect) {
-        attackee.state = attackee.update_state(attacker_weapon_effect);
+        var state = attacker_weapon_effect.trigger();
+        attackee.update_state(state);
     }
 
     if(attacker.has_state()) {
         return attacker.state.trigger(attacker, attackee);
     }
 
-    return this.normal_msg(attackee, attacker_weapon_effect);
+    return this.build_attack_msg(attackee, attacker_weapon_effect);
 };
 
-Player.prototype.normal_msg = function(attackee, attacker_weapon_effect) {
+Player.prototype.do_attack = function(attackee) {
+    var state = this.state;
+    if(state.has_no_left_round()) {
+        return this.attack(attackee);
+    }
+
+    var happened_code = state.happened();
+    if(happened_code){
+        var impact_string = state.impact(this)
+        if(happened_code.is_jump()){
+            return impact_string;
+        }else{
+            return impact_string + this.attack(attackee);
+        }
+
+    }
+
+
+
+};
+
+Player.prototype.build_attack_msg = function(attackee, attacker_weapon_effect) {
     var attacker = this;
 
     return attacker.attack_opponent_msg(attackee)

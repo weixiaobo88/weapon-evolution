@@ -17,7 +17,7 @@ Frost_Effect.prototype.trigger = function(attacker, attackee) {
         return attacker.get_name() + this.effect_damage_name + ',没有击中' + attackee.get_name() + '\n';
     }
 
-    result += attacker.normal_msg(attackee);
+    result += attacker.build_attack_msg(attackee);
 
     return result;
 };

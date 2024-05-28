@@ -10,5 +10,5 @@ function Full_Attack_Effect() {
 }
 
 Full_Attack_Effect.prototype.trigger = function(attacker, attackee) {
-    return attacker.normal_msg(attackee);
+    return attacker.build_attack_msg(attackee);
 };

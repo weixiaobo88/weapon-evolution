@@ -18,7 +18,7 @@ Flame_Effect.prototype.trigger = function(attacker, attackee) {
         result += attacker.damaged_by_weapon_effect();
     }
 
-    result += attacker.normal_msg(attackee);
+    result += attacker.build_attack_msg(attackee);
 
     return result;
 };
